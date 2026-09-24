@@ -496,12 +496,24 @@ md-fab-trigger button.md-fab {
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
   z-index: 85 !important;
   cursor: pointer !important;
-  overflow: hidden !important;
+  pointer-events: auto !important;
   outline: none !important;
   transform: none !important;
   transition: none !important;
   -webkit-transform: none !important;
   -webkit-transition: none !important;
+}
+
+/* Hide sub-actions if SOGo rendered speed dial */
+md-fab-speed-dial.sg-fab-bottom-center md-fab-actions {
+  display: none !important;
+}
+
+/* When Angular marks button as hidden (e.g. reading an email on mobile), respect it */
+.sg-fab-bottom-center.ng-hide,
+md-button.sg-fab-bottom-center.ng-hide,
+button.sg-fab-bottom-center.ng-hide {
+  display: none !important;
 }
 
 /* RTL layout (Arabic) positioning for Circular FAB */

@@ -135,45 +135,69 @@ window.sogoComposeMessage = function (e) {
     }
 
     // 1. Primary: Direct Angular scope execution on mailbox controller
-    if (typeof angular !== 'undefined') {
-        var targets = [
-            '.sg-fab-bottom-center',
-            '[ui-view="mailbox"]',
-            '.view-list',
-            'md-button[aria-label*="Write a new message"]',
-            'md-button[aria-label*="رسالة جديدة"]',
-            'main.view'
-        ];
-        for (var t = 0; t < targets.length; t++) {
-            var el = document.querySelector(targets[t]);
-            if (el) {
-                try {
+    try {
+        if (typeof angular !== 'undefined') {
+            var targets = [
+                '[ui-view="mailbox"]',
+                '.view-list',
+                '.sg-fab-bottom-center',
+                'md-button[aria-label*="Write a new message"]',
+                'md-button[aria-label*="رسالة جديدة"]',
+                'main.view',
+                'body'
+            ];
+            for (var t = 0; t < targets.length; t++) {
+                var el = document.querySelector(targets[t]);
+                if (el) {
                     var scope = angular.element(el).scope();
                     if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
-                        scope.$apply(function () {
-                            scope.mailbox.newMessage();
-                        });
+                        var run = function () {
+                            try {
+                                scope.mailbox.newMessage(e);
+                            } catch (nErr) {
+                                console.warn('newMessage call error:', nErr);
+                            }
+                        };
+
+                        if (scope.$$phase || (scope.$root && scope.$root.$$phase)) {
+                            run();
+                        } else {
+                            scope.$apply(run);
+                        }
                         return;
                     }
-                } catch (scopeErr) {}
+                }
             }
         }
+    } catch (scopeErr) {
+        console.warn('Scope search error:', scopeErr);
     }
 
-    // 2. Secondary: Dispatch genuine pointer + mouse events to native FAB button
-    var fab = document.querySelector('.sg-fab-bottom-center, md-button.md-fab.md-accent, md-button[aria-label*="Write a new message"], md-button[aria-label*="رسالة جديدة"]');
+    // 2. Secondary: If speed dial is used, click the action button inside md-fab-actions
+    var actionBtn = document.querySelector('md-fab-actions md-button[aria-label*="Write a new message"], md-fab-actions md-button[aria-label*="رسالة جديدة"], md-fab-actions md-button');
+    if (actionBtn) {
+        try {
+            if (typeof angular !== 'undefined') {
+                angular.element(actionBtn).triggerHandler('click');
+            }
+            actionBtn.click();
+            return;
+        } catch (err) {}
+    }
+
+    // 3. Tertiary: Dispatch genuine click to native FAB button
+    var fab = document.querySelector('button.sg-fab-bottom-center, md-button.sg-fab-bottom-center, md-fab-trigger button, md-button[aria-label*="Write a new message"]');
     if (fab) {
         try {
-            fab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
-            fab.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
+            if (typeof angular !== 'undefined') {
+                angular.element(fab).triggerHandler('click');
+            }
             fab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
             return;
-        } catch (mouseErr) {
-            try { fab.click(); return; } catch (e) {}
-        }
+        } catch (err) {}
     }
 
-    // 3. Fallback: Trigger SOGo hotkey 'c' on document
+    // 4. Fallback: Trigger SOGo hotkey 'c' on document
     try {
         var keyEvt = new KeyboardEvent('keydown', { key: 'c', keyCode: 67, which: 67, code: 'KeyC', bubbles: true, cancelable: true });
         document.body.dispatchEvent(keyEvt);
@@ -332,18 +356,23 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // C. Clean Minimalist Circular FAB (Remove any injected text & tooltips that freeze)
+            // C. Clean Minimalist Circular FAB - Hook direct compose trigger
             var fabTexts = document.querySelectorAll('.sg-fab-text');
             for (var t = 0; t < fabTexts.length; t++) {
                 try { fabTexts[t].remove(); } catch (e) {}
             }
-            var fabTooltips = document.querySelectorAll('.sg-fab-bottom-center md-tooltip, button.md-fab.md-accent md-tooltip, md-button.md-fab.md-accent md-tooltip');
-            for (var tt = 0; tt < fabTooltips.length; tt++) {
-                try { fabTooltips[tt].remove(); } catch (e) {}
-            }
-            var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent');
+            var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent, md-fab-trigger button');
             for (var f = 0; f < fabBtns.length; f++) {
-                fabBtns[f].removeAttribute('title');
+                var btn = fabBtns[f];
+                btn.removeAttribute('title');
+                if (!btn._sogoComposeHooked) {
+                    btn._sogoComposeHooked = true;
+                    btn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.sogoComposeMessage(e);
+                    }, true);
+                }
             }
         } catch (err) {
             console.warn('SOGo UI enhancement error:', err);
