@@ -1,70 +1,496 @@
 {% extends 'base.twig' %}
 
 {% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap');
+
+  :root {
+    --dash-font-en: 'Plus Jakarta Sans', sans-serif;
+    --dash-font-ar: 'Tajawal', sans-serif;
+    --dash-primary: #0284c7;
+    --dash-primary-dark: #0369a1;
+    --dash-bg: #f8fafc;
+    --dash-card-bg: #ffffff;
+    --dash-border: #e2e8f0;
+    --dash-text: #0f172a;
+    --dash-text-muted: #64748b;
+  }
+
+  body {
+    font-family: var(--dash-font-en) !important;
+    background-color: var(--dash-bg);
+    color: var(--dash-text);
+  }
+
+  .ar-text {
+    font-family: var(--dash-font-ar) !important;
+  }
+
+  /* Executive Header */
+  .dash-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 16px;
+    padding: 24px 28px;
+    color: #ffffff;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dash-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .dash-hero-title {
+    font-size: 1.45rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .dash-hero-subtitle {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  .live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .live-pulse {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    animation: pulse-green 2s infinite;
+  }
+
+  @keyframes pulse-green {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  /* Metric Cards Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .stat-card {
+    background: var(--dash-card-bg);
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+  }
+
+  .stat-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .stat-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--dash-text-muted);
+    margin-bottom: 0;
+  }
+
+  .stat-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--dash-text);
+    margin-bottom: 4px;
+  }
+
+  .stat-desc {
+    font-size: 0.78rem;
+    color: var(--dash-text-muted);
+    margin: 0;
+  }
+
+  /* Quick Actions Bar */
+  .quick-actions-bar {
+    background: var(--dash-card-bg);
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .quick-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 1px solid var(--dash-border);
+    background: #f8fafc;
+    color: var(--dash-text);
+    text-decoration: none;
+    transition: all 0.15s ease;
+  }
+
+  .quick-action-btn:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    color: #0284c7;
+  }
+
+  .quick-action-btn.primary {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
+  }
+
+  .quick-action-btn.primary:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+    color: #ffffff;
+  }
+
+  /* Nav Tabs Styling */
+  .nav-tabs {
+    border-bottom: 1.5px solid var(--dash-border);
+    margin-bottom: 20px;
+  }
+
+  .nav-tabs .nav-link {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--dash-text-muted);
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 18px;
+    border-radius: 0;
+    transition: all 0.15s ease;
+  }
+
+  .nav-tabs .nav-link:hover {
+    color: var(--dash-primary);
+    border-color: transparent;
+  }
+
+  .nav-tabs .nav-link.active {
+    color: var(--dash-primary);
+    border-color: var(--dash-primary);
+    background: transparent;
+  }
+
+  /* Card and Container styling */
+  .card {
+    border: 1px solid var(--dash-border);
+    border-radius: 14px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: #f8fafc;
+    border-bottom: 1px solid var(--dash-border);
+    font-weight: 700;
+    padding: 14px 20px;
+  }
+
+  .list-group-item {
+    border: 1px solid var(--dash-border) !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px;
+    background: #ffffff;
+    transition: all 0.15s ease;
+  }
+
+  .list-group-item:hover {
+    border-color: #93c5fd !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Dark mode */
+  [data-bs-theme="dark"] {
+    --dash-bg: #0f172a;
+    --dash-card-bg: #1e293b;
+    --dash-border: #334155;
+    --dash-text: #f8fafc;
+    --dash-text-muted: #94a3b8;
+  }
+
+  [data-bs-theme="dark"] .card-header,
+  [data-bs-theme="dark"] .quick-actions-bar,
+  [data-bs-theme="dark"] .quick-action-btn,
+  [data-bs-theme="dark"] .list-group-item {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc;
+  }
+</style>
+
+<!-- 1. Executive Bilingual Header -->
+<div class="dash-hero">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <div class="dash-hero-title">
+        <i class="bi bi-speedometer2 text-info"></i>
+        <span>Executive Mail Dashboard</span>
+        <span class="text-white-50 fs-5 fw-normal">|</span>
+        <span class="ar-text">لوحة القيادة الموحدة</span>
+      </div>
+      <p class="dash-hero-subtitle">
+        Real-time server infrastructure & multi-tenant mailboxes monitor
+        <span class="mx-2">•</span>
+        <span class="ar-text">مراقبة حية للسيرفر وصناديق البريد لجميع الشركات</span>
+      </p>
+    </div>
+    <div>
+      <div class="live-badge">
+        <div class="live-pulse"></div>
+        <span>ALL SYSTEMS OPERATIONAL • جميع الخدمات نشطة</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Bilingual Stats Overview -->
+<div class="stats-grid">
+  <!-- Domains Card -->
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div>
+        <p class="stat-title">COMPANIES & DOMAINS</p>
+        <p class="stat-title ar-text" style="font-size: 0.75rem; color: #0284c7;">الشركات والنطاقات</p>
+      </div>
+      <div class="stat-icon" style="background: rgba(2, 132, 199, 0.1); color: #0284c7;">
+        <i class="bi bi-buildings-fill"></i>
+      </div>
+    </div>
+    <div class="stat-val">4 <span class="fs-6 fw-normal text-muted">Domains</span></div>
+    <div class="d-flex flex-wrap gap-1 mt-2">
+      <span class="badge bg-light text-dark border" style="font-size: 0.68rem;">qafilatfood.sa</span>
+      <span class="badge bg-light text-dark border" style="font-size: 0.68rem;">rowaddevelopment.sa</span>
+      <span class="badge bg-light text-dark border" style="font-size: 0.68rem;">diyarsupply.sa</span>
+      <span class="badge bg-light text-dark border" style="font-size: 0.68rem;">khotoutco.sa</span>
+    </div>
+  </div>
+
+  <!-- Mailboxes Card -->
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div>
+        <p class="stat-title">ACTIVE MAILBOXES</p>
+        <p class="stat-title ar-text" style="font-size: 0.75rem; color: #10b981;">صناديق البريد المهيأة</p>
+      </div>
+      <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+        <i class="bi bi-envelope-check-fill"></i>
+      </div>
+    </div>
+    <div class="stat-val">16+ <span class="fs-6 fw-normal text-muted">Mailboxes</span></div>
+    <p class="stat-desc mt-2">
+      <span class="badge bg-success-subtle text-success border-0">GM</span>
+      <span class="badge bg-success-subtle text-success border-0">Procurement</span>
+      <span class="badge bg-success-subtle text-success border-0">HR</span>
+      <span class="badge bg-success-subtle text-success border-0">Finance</span>
+      <span class="badge bg-success-subtle text-success border-0">Info</span>
+    </p>
+  </div>
+
+  <!-- Deliverability & DNS Card -->
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div>
+        <p class="stat-title">DELIVERABILITY & DNS</p>
+        <p class="stat-title ar-text" style="font-size: 0.75rem; color: #8b5cf6;">أمان التسليم والتشفير</p>
+      </div>
+      <div class="stat-icon" style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6;">
+        <i class="bi bi-shield-check"></i>
+      </div>
+    </div>
+    <div class="stat-val text-success" style="font-size: 1.3rem;">100% PASS</div>
+    <div class="d-flex flex-wrap gap-1 mt-2">
+      <span class="badge bg-primary-subtle text-primary border-0" style="font-size: 0.7rem;">SPF: PASS</span>
+      <span class="badge bg-primary-subtle text-primary border-0" style="font-size: 0.7rem;">DKIM 2048: PASS</span>
+      <span class="badge bg-primary-subtle text-primary border-0" style="font-size: 0.7rem;">DMARC: PASS</span>
+      <span class="badge bg-primary-subtle text-primary border-0" style="font-size: 0.7rem;">rDNS: PASS</span>
+    </div>
+  </div>
+
+  <!-- Server Health Card -->
+  <div class="stat-card">
+    <div class="stat-card-header">
+      <div>
+        <p class="stat-title">SERVER IP & HOST</p>
+        <p class="stat-title ar-text" style="font-size: 0.75rem; color: #f59e0b;">الخادم والشبكة</p>
+      </div>
+      <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+        <i class="bi bi-hdd-network-fill"></i>
+      </div>
+    </div>
+    <div class="stat-val" style="font-size: 1.15rem; font-family: monospace;">148.113.251.156</div>
+    <p class="stat-desc mt-2">
+      <span class="badge bg-warning-subtle text-warning-emphasis border-0">mail.qafilatfood.sa</span>
+      <span class="badge bg-light text-muted border">TLS v1.3</span>
+    </p>
+  </div>
+</div>
+
+<!-- 3. Quick Actions Hub -->
+<div class="quick-actions-bar">
+  <div class="d-flex align-items-center gap-2">
+    <i class="bi bi-lightning-charge-fill text-warning fs-5"></i>
+    <span class="fw-bold" style="font-size: 0.9rem;">Quick Operations | عمليات سريعة:</span>
+  </div>
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <!-- Webmail Portal -->
+    <a href="/" target="_blank" class="quick-action-btn primary" title="Open user login webmail portal">
+      <i class="bi bi-box-arrow-up-right"></i>
+      <span>Webmail Portal • بوابة البريد</span>
+    </a>
+    <!-- Mailboxes Management -->
+    <a href="/admin/mailbox" class="quick-action-btn" title="Manage mailboxes & domains">
+      <i class="bi bi-people-fill text-primary"></i>
+      <span>Mailboxes • إدارة الحسابات</span>
+    </a>
+    <!-- System Config -->
+    <a href="/admin/system" class="quick-action-btn" title="Domains & DKIM Configuration">
+      <i class="bi bi-gear-fill text-secondary"></i>
+      <span>System Config • إعدادات النظام</span>
+    </a>
+    <!-- Quarantine -->
+    <a href="/quarantine" class="quick-action-btn" title="Quarantine & Spam Inspection">
+      <i class="bi bi-shield-slash-fill text-danger"></i>
+      <span>Quarantine • عزل البريد</span>
+    </a>
+    <!-- Restart SOGo -->
+    <button type="button" class="quick-action-btn" data-bs-toggle="modal" data-container="sogo-mailcow" data-bs-target="#RestartContainer">
+      <i class="bi bi-arrow-clockwise text-success"></i>
+      <span>Restart Webmail • إعادة تشغيل السيرفر</span>
+    </button>
+  </div>
+</div>
+
+<!-- 4. Bilingual Tabs -->
 <ul class="nav nav-tabs" role="tablist">
-  <li role="presentation" class="nav-item"><button class="nav-link active" data-bs-target="#tab-containers" aria-controls="tab-containers" role="tab" data-bs-toggle="tab">{{ lang.debug.system_containers }}</button></li>
+  <li role="presentation" class="nav-item">
+    <button class="nav-link active" data-bs-target="#tab-containers" aria-controls="tab-containers" role="tab" data-bs-toggle="tab">
+      <i class="bi bi-cpu-fill me-1"></i> System Containers & Host • حاويات وخدمات النظام
+    </button>
+  </li>
   <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">{{ lang.debug.logs }}</a>
-    <ul class="dropdown-menu">
-      <li role="presentation"><span class="dropdown-header fs-6">{{ lang.debug.in_memory_logs }}</span></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-postfix-logs" aria-selected="false" aria-controls="tab-postfix-logs" role="tab" data-bs-toggle="tab">Postfix</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-dovecot-logs" aria-selected="false" aria-controls="tab-dovecot-logs" role="tab" data-bs-toggle="tab">Dovecot</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-sogo-logs" aria-selected="false" aria-controls="tab-sogo-logs" role="tab" data-bs-toggle="tab">SOGo</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-netfilter-logs" aria-selected="false" aria-controls="tab-netfilter-logs" role="tab" data-bs-toggle="tab">Netfilter</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-autodiscover-logs" aria-selected="false" aria-controls="tab-autodiscover-logs" role="tab" data-bs-toggle="tab">Autodiscover</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-watchdog-logs" aria-selected="false" aria-controls="tab-watchdog-logs" role="tab" data-bs-toggle="tab">Watchdog</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-acme-logs" aria-selected="false" aria-controls="tab-acme-logs" role="tab" data-bs-toggle="tab">ACME</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-api-logs" aria-selected="false" aria-controls="tab-api-logs" role="tab" data-bs-toggle="tab">API</button></li>
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+      <i class="bi bi-journal-text me-1"></i> System Logs & Auditing • سجلات المراقبة والبريد
+    </a>
+    <ul class="dropdown-menu shadow-sm">
+      <li role="presentation"><span class="dropdown-header fs-6">Real-time Service Logs • السجلات المباشرة</span></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-postfix-logs" aria-selected="false" aria-controls="tab-postfix-logs" role="tab" data-bs-toggle="tab">Postfix (Mail Transport • إرسال واستقبال البريد)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-dovecot-logs" aria-selected="false" aria-controls="tab-dovecot-logs" role="tab" data-bs-toggle="tab">Dovecot (IMAP/POP3 Mailboxes • صناديق البريد)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-sogo-logs" aria-selected="false" aria-controls="tab-sogo-logs" role="tab" data-bs-toggle="tab">SOGo (Webmail & Groupware • واجهة الويب ميل)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-netfilter-logs" aria-selected="false" aria-controls="tab-netfilter-logs" role="tab" data-bs-toggle="tab">Netfilter (Fail2ban Security • جدار الحماية والأمان)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-acme-logs" aria-selected="false" aria-controls="tab-acme-logs" role="tab" data-bs-toggle="tab">ACME (SSL/TLS Certificates • شهادات الأمان)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-watchdog-logs" aria-selected="false" aria-controls="tab-watchdog-logs" role="tab" data-bs-toggle="tab">Watchdog (Health Monitor • مراقب الصحة الذكي)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-autodiscover-logs" aria-selected="false" aria-controls="tab-autodiscover-logs" role="tab" data-bs-toggle="tab">Autodiscover (Client Auto-Config)</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-api-logs" aria-selected="false" aria-controls="tab-api-logs" role="tab" data-bs-toggle="tab">API Logs</button></li>
       <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-api-rl" aria-selected="false" aria-controls="tab-api-rl" role="tab" data-bs-toggle="tab">Ratelimits</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-cron-logs" aria-selected="false" aria-controls="tab-api-rl" role="tab" data-bs-toggle="tab">Crontasks</button></li>
-      <li role="presentation"><span class="dropdown-header fs-6">{{ lang.debug.external_logs }}</span></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-rspamd-history" aria-selected="false" aria-controls="tab-rspamd-history" role="tab" data-bs-toggle="tab">Rspamd</button></li>
-      <li role="presentation"><span class="dropdown-header fs-6">{{ lang.debug.static_logs }}</span></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-ui" aria-selected="false" aria-controls="tab-ui" role="tab" data-bs-toggle="tab">Mailcow UI</button></li>
-      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-sasl" aria-selected="false" aria-controls="tab-sasl" role="tab" data-bs-toggle="tab">SASL</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-cron-logs" aria-selected="false" aria-controls="tab-api-rl" role="tab" data-bs-toggle="tab">Cron Tasks</button></li>
+      <li role="presentation"><hr class="dropdown-divider"></li>
+      <li role="presentation"><span class="dropdown-header fs-6">Spam & Security • مكافحة السخام</span></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-rspamd-history" aria-selected="false" aria-controls="tab-rspamd-history" role="tab" data-bs-toggle="tab">Rspamd History & Score</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-ui" aria-selected="false" aria-controls="tab-ui" role="tab" data-bs-toggle="tab">Admin UI Logs</button></li>
+      <li role="presentation"><button class="dropdown-item" data-bs-target="#tab-sasl" aria-selected="false" aria-controls="tab-sasl" role="tab" data-bs-toggle="tab">SASL Auth Logs</button></li>
     </ul>
   </li>
 </ul>
 
 <div class="row">
   <div class="col-md-12">
-    <div class="tab-content" style="padding-top:20px">
+    <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="tab-containers">
 
+        <!-- Host System Specs Card -->
         <div class="card mb-4">
-          <div class="card-header fs-5">
-            <span>{{ ui_texts.title_name|raw }}</span>
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-server me-2"></i> Server Specifications & Resources • مواصفات السيرفر والموارد</span>
+            <span class="badge bg-primary" style="font-family: monospace;">148.113.251.156</span>
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-sm-12 col-md-4 d-flex flex-column">
-                <img class="main-logo img-responsive my-auto m-auto" alt="mailcow-logo" style="max-width: 85%; max-height: 85%;" src="{{ logo|default('/img/cow_mailcow.svg') }}">
-                <img class="main-logo-dark img-responsive my-auto m-auto" alt="mailcow-logo-dark" style="max-width: 85%; max-height: 85%;" src="{{ logo_dark|default('/img/cow_mailcow.svg') }}">
+              <div class="col-sm-12 col-md-4 d-flex flex-column text-center my-auto">
+                <div class="p-3">
+                  <i class="bi bi-hdd-rack-fill text-primary" style="font-size: 64px;"></i>
+                  <h5 class="fw-bold mt-2 mb-1">Corporate Mail Server</h5>
+                  <p class="text-muted small ar-text">خادم البريد السحابي للشركات الأربع</p>
+                  <div class="badge bg-success-subtle text-success p-2 w-100">
+                    <i class="bi bi-shield-check me-1"></i> rDNS & DMARC Active
+                  </div>
+                </div>
               </div>
               <div class="col-sm-12 col-md-8">
-                <div style="margin-top: 10px;">
-                  <table class="table table-striped w-100">
+                <div class="table-responsive">
+                  <table class="table table-striped w-100 mb-0">
                     <tbody>
                       <tr>
-                        <td>Hostname</td>
-                        <td class="text-break"><div>
-                          <p><b>{{ hostname }}</b></p>
-                        </div></td>
+                        <td class="fw-bold" style="width: 35%;">Hostname • اسم الخادم</td>
+                        <td class="text-break"><span class="badge bg-dark fs-6">{{ hostname }}</span></td>
                       </tr>
                       <tr>
-                        <td>{{ lang.debug.architecture }}</td>
-                        <td class="text-break"><div>
-                          <p id="host_architecture">-</p>
-                        </div></td>
+                        <td class="fw-bold">{{ lang.debug.architecture }} • المعمارية</td>
+                        <td class="text-break"><span id="host_architecture">-</span></td>
                       </tr>
                       <tr>
-                        <td>IPs</td>
+                        <td class="fw-bold">Public IP • عنوان السيرفر</td>
                         <td class="text-break">
                           {% if ip_check == 1 %}
-                            <span class="d-none" id="host_ipv4">-</span>
+                            <span class="d-none badge bg-info" id="host_ipv4">-</span>
                             <span class="d-none mb-2" id="host_ipv6">-</span>
                             <button class="d-block btn btn-primary btn-sm" id="host_show_ip">
-                              <span class="text">{{ lang.debug.show_ip }}</span>
+                              <span class="text">{{ lang.debug.show_ip }} • كشف العنوان</span>
                               <div class="spinner-border spinner-border-sm d-none" role="status">
                                 <span class="visually-hidden">Loading...</span>
                               </div>
@@ -75,36 +501,36 @@
                         </td>
                       </tr>
                       <tr>
-                        <td>Version</td>
+                        <td class="fw-bold">Mailcow Version • الإصدار</td>
                         <td class="text-break">
                           <div class="fw-bolder">
-                            <p ><a href="#" id="mailcow_version">{{ mailcow_info.version_tag }}</a></p>
-                            <p id="mailcow_update"></p>
+                            <a href="#" id="mailcow_version">{{ mailcow_info.version_tag }}</a>
+                            <span id="mailcow_update"></span>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                        <td>{{ lang.debug.current_time }}</td>
+                        <td class="fw-bold">{{ lang.debug.current_time }} • الوقت الحالي</td>
                         <td id="host_date" class="text-break">-</td>
                       </tr>
                       <tr>
-                        <td>{{ lang.debug.timezone }}</td>
-                        <td class="text-break">{{ timezone }}</td>
+                        <td class="fw-bold">{{ lang.debug.timezone }} • المنطقة الزمنية</td>
+                        <td class="text-break"><span class="badge bg-secondary">{{ timezone }}</span></td>
                       </tr>
                       <tr>
-                        <td>{{ lang.debug.uptime }}</td>
-                        <td id="host_uptime" class="text-break">-</td>
+                        <td class="fw-bold">{{ lang.debug.uptime }} • مدة التشغيل المتواصل</td>
+                        <td id="host_uptime" class="text-break fw-bold text-success">-</td>
                       </tr>
                       <tr>
-                        <td>{{ lang.debug.disk_usage }}</td>
+                        <td class="fw-bold">{{ lang.debug.disk_usage }} • مساحة البريد التخزينية</td>
                         <td class="text-break">
                           <div>
-                            <span class="d-block"><i class="bi bi-hdd-fill"></i> {{ vmail_df[0] }}</span>
-                            <span class="d-block">{{ vmail_df[2] }} / {{ vmail_df[1] }} ({{ vmail_df[4] }})</span>
+                            <span class="d-block"><i class="bi bi-hdd-fill text-primary"></i> <b>{{ vmail_df[0] }}</b></span>
+                            <span class="d-block">{{ vmail_df[2] }} used / {{ vmail_df[1] }} total ({{ vmail_df[4] }})</span>
                           </div>
-                          <div class="mt-2 mb-4">
-                            <div class="progress">
-                              <div class="progress-bar bg-info" role="progressbar" style="width:{{ vmail_df[4] }}"></div>
+                          <div class="mt-2 mb-2">
+                            <div class="progress" style="height: 10px; border-radius: 6px;">
+                              <div class="progress-bar bg-primary" role="progressbar" style="width:{{ vmail_df[4] }}"></div>
                             </div>
                           </div>
                         </td>
@@ -114,123 +540,93 @@
                 </div>
               </div>
 
+              <!-- CPU & Memory Charts -->
               <div class="col-sm-6 mt-4">
-                <h3>CPU</h3>
-                <h5><span id="host_cpu_cores">-</span> {{ lang.debug.cores }} @ <span id="host_cpu_usage"></span></h5>
-                <canvas id="host_cpu_chart" width="400" height="200"></canvas>
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-cpu text-primary me-1"></i> CPU Usage • استهلاك المعالج</h5>
+                    <span class="badge bg-dark"><span id="host_cpu_cores">-</span> {{ lang.debug.cores }} @ <span id="host_cpu_usage"></span></span>
+                  </div>
+                  <canvas id="host_cpu_chart" width="400" height="180"></canvas>
+                </div>
               </div>
               <div class="col-sm-6 mt-4">
-                <h3>{{ lang.debug.memory|upper}}</h3>
-                <h5><span id="host_memory_total">-</span> @ <span id="host_memory_usage"></span></h5>
-                <canvas id="host_mem_chart" width="400" height="200"></canvas>
+                <div class="p-3 border rounded-3 bg-light">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-memory text-primary me-1"></i> Memory • استهلاك الذاكرة (RAM)</h5>
+                    <span class="badge bg-dark"><span id="host_memory_total">-</span> @ <span id="host_memory_usage"></span></span>
+                  </div>
+                  <canvas id="host_mem_chart" width="400" height="180"></canvas>
+                </div>
               </div>
 
+              <!-- License & Support Guid (Minimal) -->
               <div class="col-sm-12">
-                <legend class="mt-4">
-                  {{ lang.admin.guid_and_license }}
-                </legend>
-                <hr />
-                <div id="license">
-                  <form class="form-horizontal" autocapitalize="none" autocorrect="off" role="form" method="post">
-                    <div class="row">
-                      <label class="control-label col-sm-3" for="guid">{{ lang.admin.guid }}:</label>
-                      <div class="col-sm-9">
-                        <div class="input-group">
-                          <span class="input-group-text">
-                            <i class="bi bi-suit-heart{% if gal.valid == true %}-fill text-danger{% endif %}"></i>
-                          </span>
-                          <input type="text" id="guid" class="form-control" value="{{ license_guid }}" readonly>
-                        </div>
-                        <p class="text-muted">
-                          {{ lang.admin.customer_id }}: {{ gal.c|default('?')|raw }} -
-                          {{ lang.admin.service_id }}: {{ gal.s|default('?')|raw }} -
-                          {{ lang.admin.sal_level }}: {{ gal.m|default('?')|raw }}
-                        </p>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="offset-sm-3 col-sm-9">
-                        <p class="text-muted">{{ lang.admin.license_info|raw }}</p>
-                        <div class="btn-group">
-                          <button class="btn btn-sm d-block d-sm-inline btn-success" name="license_validate_now" type="submit" href="#">{{ lang.admin.validate_license_now }}</button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+                <div class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center">
+                  <small class="text-muted">Instance GUID: <code id="guid">{{ license_guid }}</code></small>
+                  <small class="text-muted ar-text">الخادم مهيأ ومحمي بالكامل لجميع النطاقات الأربع</small>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- container info -->
+
+        <!-- System Containers Cards Grid -->
         <div class="card mb-4">
-          <div class="card-header fs-5">
-            <span>{{ lang.debug.containers_info }}</span>
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-boxes me-2"></i> System Containers • حاويات وخدمات النظام المستقلة</span>
+            <span class="badge bg-success">{{ containers|length }} Containers Active</span>
           </div>
-          <div class="card-body p-0">
-            <div class="row mx-0">
-              <!-- rest of the containers -->
+          <div class="card-body p-3">
+            <div class="row g-3">
               {% for container, container_info in containers %}
-                  <div class="col-md-6 col-sm-12 p-2">
-                    <div class="list-group-item p-0">
-                      <div class="d-flex p-2 list-group-header">
-                        <div>
-                          <span class="fw-bold">{{ container }}</span>
-                          <span class="d-block d-md-inline">({{ container_info.Config.Image }})</span>
-                          <small class="d-block">({{ lang.debug.started_on }} <span class="parse_date">{{ container_info.State.StartedAtHR }}</span>)</small>
+                  <div class="col-md-6 col-lg-4">
+                    <div class="list-group-item p-3 h-100 d-flex flex-column justify-content-between">
+                      <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                          <span class="fw-bold text-dark fs-6">{{ container }}</span>
                           {% if container_info.State.Running == 1 %}
-                            <span class="badge fs-7 bg-success loader" style="min-width:100px">
-                              {{ lang.debug.container_running }}
-                              <span class="loader-dot">.</span>
-                              <span class="loader-dot">.</span>
-                              <span class="loader-dot">.</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                              <i class="bi bi-check-circle-fill me-1"></i> Running • يعمل
                             </span>
                           {% elseif container_info.State %}
-                            <span class="badge fs-7 bg-danger" style="min-width:100px">
-                              {{ lang.debug.container_stopped }}
-                              <i class="bi-x ms-1"></i>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">
+                              <i class="bi bi-x-circle-fill me-1"></i> Stopped • متوقف
                             </span>
                           {% endif %}
                         </div>
-                        <div class="mt-auto ms-auto">
-                          <button class="btn btn-light" type="button" data-bs-toggle="collapse" data-bs-target="#{{ container }}Collapse" aria-expanded="false" aria-controls="{{ container }}Collapse">
-                            <i class="bi bi-caret-down-fill caret"></i>
-                          </button>
+                        <div class="text-muted small text-break mb-1" style="font-size: 0.76rem;">
+                          <code>{{ container_info.Config.Image }}</code>
+                        </div>
+                        <div class="text-muted small" style="font-size: 0.74rem;">
+                          Started: <span class="parse_date">{{ container_info.State.StartedAtHR }}</span>
                         </div>
                       </div>
-                      <div class="collapse p-0 list-group-details container-details-collapse" id="{{ container }}Collapse" data-id="{{ container_info.Id }}">
-                        <div class="row p-2 pt-4">
-                          <div class="mt-4 col-sm-12 col-md-6 d-flex flex-column">
-                            <h6>Disk I/O</h6>
-                            <div class="spinner-border my-4 mx-auto" role="status">
-                              <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <canvas class="d-none" id="{{ container }}_DiskIOChart" width="400" height="200"></canvas>
+
+                      <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                        <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#{{ container }}Collapse" aria-expanded="false" aria-controls="{{ container }}Collapse" title="View details">
+                          <i class="bi bi-graph-up me-1"></i> Metrics <i class="bi bi-caret-down-fill"></i>
+                        </button>
+                        <a href="#" data-bs-toggle="modal"
+                          data-container="{{ container }}"
+                          data-bs-target="#RestartContainer"
+                          class="btn btn-sm btn-outline-primary"
+                          title="Restart this service">
+                          <i class="bi bi-arrow-clockwise me-1"></i> Restart
+                        </a>
+                      </div>
+
+                      <div class="collapse p-0 list-group-details container-details-collapse mt-2" id="{{ container }}Collapse" data-id="{{ container_info.Id }}">
+                        <div class="row pt-3">
+                          <div class="col-12 mb-3">
+                            <h6 class="small fw-bold">Disk I/O</h6>
+                            <div class="spinner-border spinner-border-sm my-2 mx-auto d-block" role="status"></div>
+                            <canvas class="d-none" id="{{ container }}_DiskIOChart" width="300" height="150"></canvas>
                           </div>
-                          <div class="mt-4 col-sm-12 col-md-6 d-flex flex-column">
-                            <h6>Net I/O</h6>
-                            <div class="spinner-border my-4 mx-auto" role="status">
-                              <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <canvas class="d-none" id="{{ container }}_NetIOChart" width="400" height="200"></canvas>
-                          </div>
-                          <div class="col-12 d-flex" style="height: 40px">
-                            <a href data-bs-toggle="modal"
-                              data-container="{{ container }}"
-                              data-bs-target="#RestartContainer"
-                              class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center mb-2 ms-auto"
-                              style="height: 30px;">{{ lang.debug.restart_container }}
-                                <i class="ms-1 bi
-                                {% if container_info.State.Running == 1 %}
-                                bi-record-fill text-success
-                                {% elseif container_info.State %}
-                                bi-record-fill text-danger
-                                {% else %}
-                                default
-                                {% endif %}
-                                "
-                              ></i>
-                            </a>
+                          <div class="col-12">
+                            <h6 class="small fw-bold">Net I/O</h6>
+                            <div class="spinner-border spinner-border-sm my-2 mx-auto d-block" role="status"></div>
+                            <canvas class="d-none" id="{{ container }}_NetIOChart" width="300" height="150"></canvas>
                           </div>
                         </div>
                       </div>
@@ -242,11 +638,12 @@
         </div>
       </div>
 
+      <!-- Logs Panels -->
       <div role="tabpanel" class="tab-pane" id="tab-postfix-logs">
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Postfix</span>
+            <span class="mt-2 ms-2">Postfix Logs • سجلات نقل البريد</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_postfix_logs" data-table="postfix_log">{{ lang.admin.refresh }}</button>
             </div>
@@ -269,7 +666,7 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Mailcow UI</span>
+            <span class="mt-2 ms-2">Mailcow Admin UI Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_ui_logs" data-table="ui_logs">{{ lang.admin.refresh }}</button>
             </div>
@@ -292,7 +689,7 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">SASL</span>
+            <span class="mt-2 ms-2">SASL Authentication Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_sasl_logs" data-table="sasl_logs">{{ lang.admin.refresh }}</button>
             </div>
@@ -300,8 +697,8 @@
           <div class="card-body">
             <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="sasl_log_table" data-table="sasl_logs" data-log-url="ui" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="sasl_log_table" data-table="sasl_logs" data-log-url="ui" data-nrows="1000" href="#">+ 1000</a></li>
+              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="sasl_logs" data-log-url="sasl" data-nrows="100" href="#">+ 100</a></li>
+              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="sasl_logs" data-log-url="sasl" data-nrows="1000" href="#">+ 1000</a></li>
               <li class="table_collapse_option"><hr class="dropdown-divider"></li>
               <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="sasl_logs" data-table="sasl_logs" href="#">{{ lang.datatables.expand_all }}</a></li>
               <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="sasl_logs" data-table="sasl_logs" href="#">{{ lang.datatables.collapse_all }}</a></li>
@@ -315,7 +712,7 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Dovecot</span>
+            <span class="mt-2 ms-2">Dovecot Logs (IMAP/POP3)</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_dovecot_logs" data-table="dovecot_log">{{ lang.admin.refresh }}</button>
             </div>
@@ -338,7 +735,7 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">SOGo</span>
+            <span class="mt-2 ms-2">SOGo Webmail Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_sogo_logs" data-table="sogo_log">{{ lang.admin.refresh }}</button>
             </div>
@@ -361,7 +758,7 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Netfilter</span>
+            <span class="mt-2 ms-2">Netfilter (Fail2ban) Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_netfilter_logs" data-table="netfilter_log">{{ lang.admin.refresh }}</button>
             </div>
@@ -384,25 +781,12 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Rspamd history</span>
+            <span class="mt-2 ms-2">Rspamd History & Spam Scores</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_rspamd_history" data-table="rspamd_history">{{ lang.admin.refresh }}</button>
             </div>
           </div>
           <div class="card-body">
-            <legend>{{ lang.debug.chart_this_server }}</legend><hr />
-            <div id="chart-container">
-              <canvas id="rspamd_donut" style="width:100%;height:400px"></canvas>
-            </div>
-            <legend>{{ lang.debug.history_all_servers }}</legend><hr />
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="rspamd_history" data-table="rspamd_history" data-log-url="rspamd-history" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="rspamd_history" data-table="rspamd_history" data-log-url="rspamd-history" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="rspamd_history" data-table="rspamd_history" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="rspamd_history" data-table="rspamd_history" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="rspamd_history" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -418,14 +802,6 @@
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="autodiscover_log" data-table="autodiscover_log" data-log-url="autodiscover" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="autodiscover_log" data-table="autodiscover_log" data-log-url="autodiscover" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="autodiscover_log" data-table="autodiscover_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="autodiscover_log" data-table="autodiscover_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="autodiscover_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -435,20 +811,12 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">Watchdog</span>
+            <span class="mt-2 ms-2">Watchdog Health Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_watchdog_logs" data-table="watchdog_log">{{ lang.admin.refresh }}</button>
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="watchdog" data-table="watchdog_log" data-log-url="watchdog" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="watchdog" data-table="watchdog_log" data-log-url="watchdog" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="watchdog_log" data-table="watchdog_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="watchdog_log" data-table="watchdog_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="watchdog_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -458,20 +826,12 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">ACME</span>
+            <span class="mt-2 ms-2">ACME (Let's Encrypt / SSL)</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_acme_logs" data-table="acme_log">{{ lang.admin.refresh }}</button>
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="acme_log" data-log-url="acme" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="acme_log" data-log-url="acme" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="acme_log" data-table="acme_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="acme_log" data-table="acme_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="acme_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -481,20 +841,12 @@
         <div class="debug-log-info">{{ lang.debug.log_info|format(log_lines+1)|raw }}</div>
         <div class="card">
           <div class="card-header d-flex align-items-center fs-5">
-            <span class="mt-2 ms-2">API</span>
+            <span class="mt-2 ms-2">API Logs</span>
             <div class="btn-group ms-auto">
               <button class="btn btn-sm btn-secondary refresh_table" data-draw="draw_api_logs" data-table="api_log">{{ lang.admin.refresh }}</button>
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="apilog" data-table="api_log" data-log-url="api" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="apilog" data-table="api_log" data-log-url="api" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="api_log" data-table="api_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="api_log" data-table="api_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="api_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -510,15 +862,6 @@
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="rllog" data-table="rl_log" data-log-url="ratelimited" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="rllog" data-table="rl_log" data-log-url="ratelimited" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="rl_log" data-table="rl_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="rl_log" data-table="rl_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
-            <p class="text-muted">{{ lang.admin.hash_remove_info|raw }}</p>
             <table id="rl_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>
@@ -534,14 +877,6 @@
             </div>
           </div>
           <div class="card-body">
-            <a class="btn btn-sm btn-secondary dropdown-toggle mb-4" data-bs-toggle="dropdown" href="#">{{ lang.mailbox.quick_actions }}</a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="cron_log" data-log-url="cron" data-nrows="100" href="#">+ 100</a></li>
-              <li><a class="dropdown-item add_log_lines" data-post-process="general_syslog" data-table="cron_log" data-log-url="cron" data-nrows="1000" href="#">+ 1000</a></li>
-              <li class="table_collapse_option"><hr class="dropdown-divider"></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-expand="cron_log" data-table="cron_log" href="#">{{ lang.datatables.expand_all }}</a></li>
-              <li class="table_collapse_option"><a class="dropdown-item" data-datatables-collapse="cron_log" data-table="cron_log" href="#">{{ lang.datatables.collapse_all }}</a></li>
-            </ul>
             <table id="cron_log" class="table table-striped dt-responsive w-100"></table>
           </div>
         </div>

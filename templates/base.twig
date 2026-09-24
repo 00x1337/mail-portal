@@ -64,20 +64,23 @@
         {% if mailcow_cc_role %}
         {% if mailcow_cc_role == 'admin' %}
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">{{ lang.header.mailcow_system }}</a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin/dashboard" class="dropdown-item {% if is_uri('dashboard') %}active{% endif %}">{{ lang.header.debug }}</a></li>
-            <li><a href="/admin/system" class="dropdown-item {% if is_uri('system') %}active{% endif %}">{{ lang.header.mailcow_config }}</a></li>
+          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="bi bi-cpu me-1"></i> System • النظام</a>
+          <ul class="dropdown-menu shadow-sm">
+            <li><a href="/admin/dashboard" class="dropdown-item {% if is_uri('dashboard') %}active{% endif %}"><i class="bi bi-speedometer2 me-2"></i> Dashboard & Logs • لوحة القيادة والمراقبة</a></li>
+            <li><a href="/admin/system" class="dropdown-item {% if is_uri('system') %}active{% endif %}"><i class="bi bi-gear me-2"></i> System Config • إعدادات النظام و DKIM</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
-          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">{{ lang.header.email }}</a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin/mailbox" class="dropdown-item {% if is_uri('mailbox') %}active{% endif %}">{{ lang.header.mailcow_config }}</a></li>
-            <li><a href="/quarantine" class="dropdown-item {% if is_uri('quarantine') %}active{% endif %}">{{ lang.header.quarantine }}</a></li>
-            <li><a href="/admin/queue" class="dropdown-item {% if is_uri('queue') %}active{% endif %}">{{ lang.queue.queue_manager }}</a></li>
-            <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-container="sogo-mailcow" data-bs-target="#RestartContainer">{{ lang.header.restart_sogo }}</a></li>
+          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false"><i class="bi bi-envelope-fill me-1"></i> Email & Domains • البريد والنطاقات</a>
+          <ul class="dropdown-menu shadow-sm">
+            <li><a href="/admin/mailbox" class="dropdown-item {% if is_uri('mailbox') %}active{% endif %}"><i class="bi bi-people me-2"></i> Mailboxes & Domains • إدارة الحسابات والنطاقات</a></li>
+            <li><a href="/quarantine" class="dropdown-item {% if is_uri('quarantine') %}active{% endif %}"><i class="bi bi-shield-slash me-2"></i> Quarantine • عزل ومكافحة السخام</a></li>
+            <li><a href="/admin/queue" class="dropdown-item {% if is_uri('queue') %}active{% endif %}"><i class="bi bi-list-task me-2"></i> Mail Queue • طابور الرسائل</a></li>
+            <li><a href="#" class="dropdown-item" data-bs-toggle="modal" data-container="sogo-mailcow" data-bs-target="#RestartContainer"><i class="bi bi-arrow-clockwise me-2"></i> Restart Webmail • إعادة تشغيل السيرفر</a></li>
           </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/" target="_blank" class="nav-link fw-bold text-primary"><i class="bi bi-box-arrow-up-right me-1"></i> Webmail Portal • بوابة الموظفين</a>
         </li>
         {% endif %}
         {% if mailcow_cc_role == 'domainadmin' %}
