@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+*~
+templates/cache/
+*.pyc
+__pycache__/
