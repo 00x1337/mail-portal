@@ -317,14 +317,36 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // C. Clean Minimalist Circular FAB - cosmetic only, let Angular handle clicks natively
+            // C. Replace speed-dial FAB with direct compose button
+            // SOGo's speed dial opens sub-actions (hidden by our CSS) = clicking does nothing.
+            // Solution: Replace the speed-dial with a simple button that calls compose directly.
+            var speedDial = document.querySelector('md-fab-speed-dial.sg-fab-bottom-center');
+            if (speedDial && !speedDial._sogoReplaced) {
+                speedDial._sogoReplaced = true;
+                var replacementBtn = document.createElement('button');
+                replacementBtn.className = 'md-fab md-accent sg-fab-bottom-center sogo-direct-compose';
+                replacementBtn.setAttribute('aria-label', 'Write a new message');
+                replacementBtn.type = 'button';
+                replacementBtn.innerHTML = '<md-icon class="material-icons" role="img" aria-hidden="true">edit</md-icon>';
+                replacementBtn.onclick = function (ev) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                    window.sogoComposeMessage(ev);
+                };
+                speedDial.parentNode.insertBefore(replacementBtn, speedDial);
+                speedDial.style.display = 'none';
+            }
+
+            // Also handle standalone FAB (when composeWindowEnabled) — just clean it up
+            var standaloneFab = document.querySelector('md-button.md-fab.md-accent.sg-fab-bottom-center');
+            if (standaloneFab) {
+                standaloneFab.removeAttribute('title');
+            }
+
+            // Remove any leftover text labels
             var fabTexts = document.querySelectorAll('.sg-fab-text');
             for (var t = 0; t < fabTexts.length; t++) {
                 try { fabTexts[t].remove(); } catch (e) {}
-            }
-            var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent, md-fab-trigger button');
-            for (var f = 0; f < fabBtns.length; f++) {
-                fabBtns[f].removeAttribute('title');
             }
         } catch (err) {
             console.warn('SOGo UI enhancement error:', err);
