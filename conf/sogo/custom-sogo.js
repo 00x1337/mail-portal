@@ -131,16 +131,14 @@ function saveLangDirect(targetLang) {
 // 6. Robust Compose Message Trigger
 window.sogoComposeMessage = function (e) {
 
-    // 1. Primary: Direct Angular scope execution on mailbox controller
+    // Only method: find Angular scope with mailbox.newMessage and call it directly
     try {
         if (typeof angular !== 'undefined') {
             var targets = [
                 '[ui-view="mailbox"]',
                 '.view-list',
-                '.sg-fab-bottom-center',
-                'md-button[aria-label*="Write a new message"]',
-                'md-button[aria-label*="رسالة جديدة"]',
                 'main.view',
+                '[ng-app]',
                 'body'
             ];
             for (var t = 0; t < targets.length; t++) {
@@ -148,57 +146,23 @@ window.sogoComposeMessage = function (e) {
                 if (el) {
                     var scope = angular.element(el).scope();
                     if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
-                        var run = function () {
-                            try {
-                                scope.mailbox.newMessage(e);
-                            } catch (nErr) {
-                                console.warn('newMessage call error:', nErr);
-                            }
-                        };
-
+                        var syntheticEvent = e || null;
                         if (scope.$$phase || (scope.$root && scope.$root.$$phase)) {
-                            run();
+                            scope.mailbox.newMessage(syntheticEvent);
                         } else {
-                            scope.$apply(run);
+                            scope.$apply(function () {
+                                scope.mailbox.newMessage(syntheticEvent);
+                            });
                         }
                         return;
                     }
                 }
             }
+            console.warn('SOGo compose: mailbox scope not found on any target element');
         }
     } catch (scopeErr) {
-        console.warn('Scope search error:', scopeErr);
+        console.warn('SOGo compose error:', scopeErr);
     }
-
-    // 2. Secondary: If speed dial is used, click the action button inside md-fab-actions
-    var actionBtn = document.querySelector('md-fab-actions md-button[aria-label*="Write a new message"], md-fab-actions md-button[aria-label*="رسالة جديدة"], md-fab-actions md-button');
-    if (actionBtn) {
-        try {
-            if (typeof angular !== 'undefined') {
-                angular.element(actionBtn).triggerHandler('click');
-            }
-            actionBtn.click();
-            return;
-        } catch (err) {}
-    }
-
-    // 3. Tertiary: Dispatch genuine click to native FAB button
-    var fab = document.querySelector('button.sg-fab-bottom-center, md-button.sg-fab-bottom-center, md-fab-trigger button, md-button[aria-label*="Write a new message"]');
-    if (fab) {
-        try {
-            if (typeof angular !== 'undefined') {
-                angular.element(fab).triggerHandler('click');
-            }
-            fab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
-            return;
-        } catch (err) {}
-    }
-
-    // 4. Fallback: Trigger SOGo hotkey 'c' on document
-    try {
-        var keyEvt = new KeyboardEvent('keydown', { key: 'c', keyCode: 67, which: 67, code: 'KeyC', bubbles: true, cancelable: true });
-        document.body.dispatchEvent(keyEvt);
-    } catch (keyErr) {}
 };
 
 // 7. Quick Mailbox Refresh Trigger
