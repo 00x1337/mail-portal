@@ -131,48 +131,53 @@ function saveLangDirect(targetLang) {
 // 6. Robust Compose Message Trigger
 window.sogoComposeMessage = function (e) {
     if (e) {
-        e.preventDefault();
-        e.stopPropagation();
+        try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
     }
 
-    // 1. Try triggering Angular ng-click on native SOGo compose button
-    var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, md-button[aria-label*="Write a new message"], md-button[aria-label*="رسالة جديدة"], md-button[aria-label*="new message" i]');
-    for (var i = 0; i < fabBtns.length; i++) {
-        var btn = fabBtns[i];
-        if (btn.id !== 'sogo-sidebar-compose-btn' && btn.id !== 'sogo-topbar-compose-btn') {
-            try {
-                if (typeof angular !== 'undefined') {
-                    angular.element(btn).triggerHandler('click');
-                    return;
-                }
-            } catch (err) {}
-            btn.click();
-            return;
-        }
-    }
-
-    // 2. Try Angular scope on MailboxController
-    try {
-        if (typeof angular !== 'undefined') {
-            var viewEl = document.querySelector('[ui-view="mailbox"]') || document.querySelector('.view-list');
-            if (viewEl) {
-                var scope = angular.element(viewEl).scope();
-                if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
-                    scope.mailbox.newMessage();
-                    scope.$apply();
-                    return;
-                }
+    // 1. Primary: Direct Angular scope execution on mailbox controller
+    if (typeof angular !== 'undefined') {
+        var targets = [
+            '.sg-fab-bottom-center',
+            '[ui-view="mailbox"]',
+            '.view-list',
+            'md-button[aria-label*="Write a new message"]',
+            'md-button[aria-label*="رسالة جديدة"]',
+            'main.view'
+        ];
+        for (var t = 0; t < targets.length; t++) {
+            var el = document.querySelector(targets[t]);
+            if (el) {
+                try {
+                    var scope = angular.element(el).scope();
+                    if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
+                        scope.$apply(function () {
+                            scope.mailbox.newMessage();
+                        });
+                        return;
+                    }
+                } catch (scopeErr) {}
             }
         }
-    } catch (err) {
-        console.warn('Scope newMessage error:', err);
     }
 
-    // 3. Fallback: simulate hotkey 'c'
+    // 2. Secondary: Dispatch genuine pointer + mouse events to native FAB button
+    var fab = document.querySelector('.sg-fab-bottom-center, md-button.md-fab.md-accent, md-button[aria-label*="Write a new message"], md-button[aria-label*="رسالة جديدة"]');
+    if (fab) {
+        try {
+            fab.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
+            fab.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
+            fab.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+            return;
+        } catch (mouseErr) {
+            try { fab.click(); return; } catch (e) {}
+        }
+    }
+
+    // 3. Fallback: Trigger SOGo hotkey 'c' on document
     try {
-        var keyEv = new KeyboardEvent('keydown', { key: 'c', code: 'KeyC', bubbles: true, cancelable: true });
-        document.dispatchEvent(keyEv);
-    } catch (err) {}
+        var keyEvt = new KeyboardEvent('keydown', { key: 'c', keyCode: 67, which: 67, code: 'KeyC', bubbles: true, cancelable: true });
+        document.body.dispatchEvent(keyEvt);
+    } catch (keyErr) {}
 };
 
 // 7. Quick Mailbox Refresh Trigger
