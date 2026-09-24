@@ -467,7 +467,7 @@ md-dialog.sg-mail-editor md-toolbar {
   background: #0f172a !important;
 }
 
-/* --- 9. Floating Compose Button (Clean Minimalist Circular FAB) --- */
+/* --- 9. Floating Compose Button (Clean Minimalist Circular FAB - No Sticky Hover) --- */
 .sg-fab-bottom-center,
 md-button.md-fab.md-accent,
 button.md-fab.md-accent,
@@ -490,15 +490,18 @@ md-fab-trigger button.md-fab {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  background: #2563eb !important;
   color: #ffffff !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
   z-index: 85 !important;
   cursor: pointer !important;
   overflow: hidden !important;
   outline: none !important;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform: none !important;
+  transition: none !important;
+  -webkit-transform: none !important;
+  -webkit-transition: none !important;
 }
 
 /* RTL layout (Arabic) positioning for Circular FAB */
@@ -519,28 +522,32 @@ body.rtl md-fab-trigger button.md-fab {
   padding: 0 !important;
 }
 
-/* Hover & Active States */
+/* Hover, Focus & Active States: No transform, no freeze */
 .sg-fab-bottom-center:hover,
-md-button.md-fab.md-accent:hover,
-button.md-fab.md-accent:hover,
-md-fab-trigger button.md-fab:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5), 0 3px 8px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-2px) scale(1.06) !important;
-}
-
+.sg-fab-bottom-center:focus,
 .sg-fab-bottom-center:active,
+md-button.md-fab.md-accent:hover,
+md-button.md-fab.md-accent:focus,
 md-button.md-fab.md-accent:active,
+button.md-fab.md-accent:hover,
+button.md-fab.md-accent:focus,
 button.md-fab.md-accent:active,
+md-fab-trigger button.md-fab:hover,
+md-fab-trigger button.md-fab:focus,
 md-fab-trigger button.md-fab:active {
-  transform: translateY(0) scale(0.96) !important;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35) !important;
+  background: #1d4ed8 !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45) !important;
+  transform: none !important;
+  -webkit-transform: none !important;
 }
 
-/* Pencil Icon Inside Circular FAB */
+/* Pencil Icon Inside Circular FAB: Static, no rotation */
 .sg-fab-bottom-center md-icon,
+.sg-fab-bottom-center:hover md-icon,
 md-button.md-fab.md-accent md-icon,
-button.md-fab.md-accent md-icon {
+md-button.md-fab.md-accent:hover md-icon,
+button.md-fab.md-accent md-icon,
+button.md-fab.md-accent:hover md-icon {
   color: #ffffff !important;
   font-size: 22px !important;
   width: 22px !important;
@@ -549,22 +556,24 @@ button.md-fab.md-accent md-icon {
   min-width: 22px !important;
   margin: 0 !important;
   padding: 0 !important;
-  transition: transform 0.2s ease !important;
+  transform: none !important;
+  transition: none !important;
+  -webkit-transform: none !important;
 }
 
-.sg-fab-bottom-center:hover md-icon,
-md-button.md-fab.md-accent:hover md-icon,
-button.md-fab.md-accent:hover md-icon {
-  transform: rotate(-10deg) scale(1.1) !important;
-}
-
-/* Hide any text label inside FAB */
+/* Hide any text label and tooltips that can freeze/hang on touch */
 .sg-fab-text,
 .sg-fab-bottom-center::after,
 md-button.md-fab.md-accent::after,
-button.md-fab.md-accent::after {
+button.md-fab.md-accent::after,
+.sg-fab-bottom-center md-tooltip,
+md-button.md-fab.md-accent md-tooltip,
+button.md-fab.md-accent md-tooltip {
   display: none !important;
   content: "" !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* --- 10. Clean Custom Scrollbars --- */
@@ -724,6 +733,10 @@ button.md-fab.md-accent::after {
     padding: 0 !important;
     box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45) !important;
     z-index: 85 !important;
+    transform: none !important;
+    transition: none !important;
+    -webkit-transform: none !important;
+    -webkit-transition: none !important;
   }
 
   [dir="rtl"] .sg-fab-bottom-center,

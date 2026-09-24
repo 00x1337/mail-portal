@@ -332,14 +332,18 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // C. Clean Minimalist Circular FAB (Remove any injected text)
+            // C. Clean Minimalist Circular FAB (Remove any injected text & tooltips that freeze)
             var fabTexts = document.querySelectorAll('.sg-fab-text');
             for (var t = 0; t < fabTexts.length; t++) {
                 try { fabTexts[t].remove(); } catch (e) {}
             }
+            var fabTooltips = document.querySelectorAll('.sg-fab-bottom-center md-tooltip, button.md-fab.md-accent md-tooltip, md-button.md-fab.md-accent md-tooltip');
+            for (var tt = 0; tt < fabTooltips.length; tt++) {
+                try { fabTooltips[tt].remove(); } catch (e) {}
+            }
             var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent');
             for (var f = 0; f < fabBtns.length; f++) {
-                fabBtns[f].title = isArabic ? 'رسالة جديدة' : 'New Message';
+                fabBtns[f].removeAttribute('title');
             }
         } catch (err) {
             console.warn('SOGo UI enhancement error:', err);
