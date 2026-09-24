@@ -130,9 +130,6 @@ function saveLangDirect(targetLang) {
 
 // 6. Robust Compose Message Trigger
 window.sogoComposeMessage = function (e) {
-    if (e) {
-        try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
-    }
 
     // 1. Primary: Direct Angular scope execution on mailbox controller
     try {
@@ -356,23 +353,14 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // C. Clean Minimalist Circular FAB - Hook direct compose trigger
+            // C. Clean Minimalist Circular FAB - cosmetic only, let Angular handle clicks natively
             var fabTexts = document.querySelectorAll('.sg-fab-text');
             for (var t = 0; t < fabTexts.length; t++) {
                 try { fabTexts[t].remove(); } catch (e) {}
             }
             var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent, md-fab-trigger button');
             for (var f = 0; f < fabBtns.length; f++) {
-                var btn = fabBtns[f];
-                btn.removeAttribute('title');
-                if (!btn._sogoComposeHooked) {
-                    btn._sogoComposeHooked = true;
-                    btn.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.sogoComposeMessage(e);
-                    }, true);
-                }
+                fabBtns[f].removeAttribute('title');
             }
         } catch (err) {
             console.warn('SOGo UI enhancement error:', err);
