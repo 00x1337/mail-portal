@@ -1,0 +1,496 @@
+/* ==========================================================================
+   SOGo Corporate Modern Theme - Bilingual Arabic & English
+   Clean, simplified, intuitive, and executive webmail experience
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* --- 1. Global Typography & Core Overrides --- */
+html, body,
+md-toolbar, md-sidenav, md-content, md-card, md-list, md-list-item,
+input, textarea, button, select,
+.sg-md-title, .md-subhead, .md-body-1, .md-caption, .md-button,
+.sg-message-list-item, .sg-folder-name, .sg-subject {
+  font-family: 'Plus Jakarta Sans', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[lang="ar"], [dir="rtl"], body.rtl {
+  font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Background canvas */
+body.main {
+  background-color: #f8fafc !important;
+}
+
+/* --- 2. Hide Archaic, Distracting, and Clutter Elements --- */
+.sg-date-group,
+.sg-date-today,
+md-button[ng-show*="path.help"],
+a[href*="help"],
+md-button[ng-show*="isCleanMailboxEnabled"],
+md-menu-item:has(md-button[ng-click*="Clean mailbox"]) {
+  display: none !important;
+}
+
+/* --- 3. Top Navigation Bar (Header) --- */
+md-toolbar.toolbar-main {
+  background: #0f172a !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+  min-height: 56px !important;
+  height: 56px !important;
+  padding: 0 12px !important;
+}
+
+md-toolbar.toolbar-main .sg-toolbar-group-1 {
+  align-items: center !important;
+}
+
+md-toolbar.toolbar-main .sg-toolbar-group-last {
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+md-toolbar.toolbar-main md-icon {
+  color: #94a3b8 !important;
+  transition: color 0.15s ease;
+}
+
+md-toolbar.toolbar-main md-button:hover md-icon {
+  color: #ffffff !important;
+}
+
+/* Topbar Icon Buttons */
+md-toolbar.toolbar-main md-button.md-icon-button {
+  margin: 0 2px !important;
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  min-height: 36px !important;
+  transition: all 0.2s ease !important;
+}
+
+md-toolbar.toolbar-main md-button.md-icon-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* --- 4. Custom Topbar Language Switcher & Quick Actions --- */
+.sogo-lang-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 5px 14px !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  margin: 0 6px !important;
+  line-height: 1 !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  text-decoration: none !important;
+}
+
+.sogo-lang-toggle:hover {
+  background: #2563eb !important;
+  border-color: #3b82f6 !important;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.4) !important;
+  transform: translateY(-1px);
+}
+
+.sogo-lang-toggle i {
+  font-size: 14px;
+}
+
+/* Corporate Brand / Company Badge in Topbar */
+.sogo-header-company {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 12px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  color: #f1f5f9 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin-left: 12px !important;
+  margin-right: 12px !important;
+}
+
+.sogo-header-company .company-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+/* Topbar Quick Refresh Button */
+.sogo-quick-refresh {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  color: #cbd5e1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 0 4px !important;
+}
+
+.sogo-quick-refresh:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  transform: rotate(90deg);
+}
+
+/* Topbar Quick Compose */
+.sogo-topbar-compose {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+  transition: all 0.2s ease !important;
+  margin-right: 8px !important;
+  margin-left: 8px !important;
+}
+
+.sogo-topbar-compose:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45) !important;
+}
+
+/* --- 5. Left Sidenav Modernization --- */
+md-sidenav.md-sidenav-left {
+  background: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+  box-shadow: none !important;
+  width: 260px !important;
+  max-width: 260px !important;
+}
+
+[dir="rtl"] md-sidenav.md-sidenav-left {
+  border-right: none !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+/* User Account Profile in Sidenav */
+md-sidenav.md-sidenav-left md-toolbar.sg-padded {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  padding: 14px 16px !important;
+  min-height: unset !important;
+  height: auto !important;
+}
+
+md-sidenav.md-sidenav-left .sg-avatar-image {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+
+md-sidenav.md-sidenav-left .sg-md-title {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+}
+
+md-sidenav.md-sidenav-left .md-caption {
+  color: #64748b !important;
+  font-size: 12px !important;
+  margin: 0 !important;
+}
+
+/* Prominent Sidebar Compose Button */
+.sogo-sidebar-compose {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  padding: 11px 18px !important;
+  border-radius: 10px !important;
+  margin: 14px 14px 8px 14px !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
+  text-decoration: none !important;
+}
+
+.sogo-sidebar-compose:hover {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.42) !important;
+}
+
+/* Mailbox Folder Items */
+.sg-account-section {
+  padding: 6px 4px !important;
+}
+
+.sg-mailbox-list-item {
+  border-radius: 8px !important;
+  margin: 2px 6px !important;
+  padding: 4px 10px !important;
+  min-height: 38px !important;
+  height: 38px !important;
+  transition: all 0.15s ease !important;
+  color: #334155 !important;
+}
+
+.sg-mailbox-list-item:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+.sg-mailbox-list-item.sg-selected,
+.sg-mailbox-list-item.md-bg {
+  background: #eff6ff !important;
+  color: #2563eb !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #2563eb !important;
+}
+
+[dir="rtl"] .sg-mailbox-list-item.sg-selected,
+[dir="rtl"] .sg-mailbox-list-item.md-bg {
+  border-left: none !important;
+  border-right: 3px solid #2563eb !important;
+}
+
+.sg-mailbox-list-item.sg-selected md-icon {
+  color: #2563eb !important;
+}
+
+/* Unread Badge Counter */
+.sg-mailbox-list-item md-chip,
+.sg-unread-badge,
+span[ng-bind*="unseenCount"] {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  padding: 2px 7px !important;
+  border-radius: 9999px !important;
+  min-height: 18px !important;
+  line-height: 18px !important;
+}
+
+/* Quota Indicator */
+.sg-quota {
+  padding: 8px 16px !important;
+}
+
+.sg-quota md-progress-linear .md-bar {
+  background-color: #2563eb !important;
+}
+
+.sg-quota .sg-md-caption {
+  font-size: 11px !important;
+  color: #64748b !important;
+}
+
+/* --- 6. Middle Column (Email Message List) --- */
+.view-list {
+  background: #ffffff !important;
+  border-right: 1px solid #e2e8f0 !important;
+}
+
+[dir="rtl"] .view-list {
+  border-right: none !important;
+  border-left: 1px solid #e2e8f0 !important;
+}
+
+/* Message List Top Search Bar */
+.view-list md-toolbar {
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+  box-shadow: none !important;
+  min-height: 52px !important;
+  height: 52px !important;
+}
+
+.view-list md-toolbar .sg-folder-name {
+  color: #0f172a !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+}
+
+.view-list md-toolbar md-icon {
+  color: #64748b !important;
+}
+
+/* Message Rows */
+md-list-item.sg-message-list-item {
+  border-bottom: 1px solid #f1f5f9 !important;
+  background: #ffffff !important;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  min-height: 64px !important;
+  transition: all 0.15s ease !important;
+}
+
+md-list-item.sg-message-list-item:hover {
+  background: #f8fafc !important;
+}
+
+md-list-item.sg-message-list-item.sg-selected {
+  background: #eff6ff !important;
+  border-left: 3px solid #2563eb !important;
+}
+
+[dir="rtl"] md-list-item.sg-message-list-item.sg-selected {
+  border-left: none !important;
+  border-right: 3px solid #2563eb !important;
+}
+
+/* Unread Messages */
+.sg-message-list-item.sg-unread {
+  background: #ffffff !important;
+}
+
+.sg-message-list-item.sg-unread .sg-md-title {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+}
+
+.sg-message-list-item.sg-unread .sg-subject {
+  color: #1e293b !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+}
+
+/* Read Messages */
+.sg-message-list-item:not(.sg-unread) .sg-md-title {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+.sg-message-list-item:not(.sg-unread) .sg-subject {
+  color: #64748b !important;
+}
+
+/* Star Flagged */
+md-icon.sg-icon-star {
+  color: #f59e0b !important;
+}
+
+/* --- 7. Right Column (Reading Pane) --- */
+#detailView {
+  background: #f8fafc !important;
+  padding: 8px !important;
+}
+
+#detailView md-card {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid #e2e8f0 !important;
+  margin: 4px !important;
+}
+
+#detailView md-card-actions {
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  padding: 8px 14px !important;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+}
+
+#detailView md-card-actions md-button {
+  border-radius: 8px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  margin: 0 2px !important;
+  color: #475569 !important;
+  transition: all 0.15s ease !important;
+}
+
+#detailView md-card-actions md-button:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Message Subject Heading */
+#detailView .sg-message-subject {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  line-height: 1.4 !important;
+  margin-bottom: 12px !important;
+}
+
+/* Message Body Content */
+#detailView .sg-message-body {
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+  color: #1e293b !important;
+  padding: 16px 20px !important;
+}
+
+/* --- 8. Compose Dialog / Modal --- */
+md-dialog.sg-mail-editor {
+  border-radius: 14px !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18) !important;
+  overflow: hidden !important;
+}
+
+md-dialog.sg-mail-editor md-toolbar {
+  background: #0f172a !important;
+}
+
+/* Send Button in Composer */
+md-dialog.sg-mail-editor md-button[ng-click*="send"] {
+  background: #2563eb !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border-radius: 8px !important;
+  padding: 6px 18px !important;
+}
+
+md-dialog.sg-mail-editor md-button[ng-click*="send"]:hover {
+  background: #1d4ed8 !important;
+}
+
+/* --- 9. Clean Custom Scrollbars --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

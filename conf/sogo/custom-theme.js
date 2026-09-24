@@ -1,36 +1,51 @@
-/* EXAMPLE - EXAMPLE - EXAMPLE - EXAMPLE - EXAMPLE - EXAMPLE - EXAMPLE
 (function() {
   'use strict';
   angular.module('SOGo.Common')
-    .config(configure)
+    .config(configure);
 
   configure.$inject = ['$mdThemingProvider'];
   function configure($mdThemingProvider) {
-    var greyMap = $mdThemingProvider.extendPalette('grey', {
-      '200': 'F5F5F5',
-      '300': 'E5E5E5',
-      '1000': '4C566A'
+    // Custom modern blue primary palette
+    var modernBlue = $mdThemingProvider.extendPalette('blue', {
+      '500': '2563eb',
+      '600': '1d4ed8',
+      '700': '1e40af',
+      '800': '1e3a8a',
+      'contrastDefaultColor': 'light'
     });
-    var greenCow = $mdThemingProvider.extendPalette('green', {
-      '600': 'E5E5E5'
+
+    // Clean slate background
+    var cleanGrey = $mdThemingProvider.extendPalette('grey', {
+      '50':  'f8fafc',
+      '100': 'f1f5f9',
+      '200': 'e2e8f0',
+      '300': 'cbd5e1',
+      '400': '94a3b8',
+      '500': '64748b',
+      '600': '475569',
+      '700': '334155',
+      '800': '1e293b',
+      '900': '0f172a'
     });
-    $mdThemingProvider.definePalette('frost-grey', greyMap);
-    $mdThemingProvider.definePalette('green-cow', greenCow);
+
+    $mdThemingProvider.definePalette('modern-blue', modernBlue);
+    $mdThemingProvider.definePalette('clean-grey', cleanGrey);
+
     $mdThemingProvider.theme('default')
-      .primaryPalette('green-cow', {
-        'default': '400',
+      .primaryPalette('modern-blue', {
+        'default': '600',
+        'hue-1': '500',
+        'hue-2': '700',
+        'hue-3': '800'
+      })
+      .accentPalette('modern-blue', {
+        'default': '500',
         'hue-1': '400',
         'hue-2': '600',
-        'hue-3': 'A700'
+        'hue-3': '700'
       })
-      .accentPalette('green', {
-        'default': '600',
-        'hue-1': '300',
-        'hue-2': '300',
-        'hue-3': 'A700'
-      })
-      .backgroundPalette('frost-grey');
+      .backgroundPalette('clean-grey');
+
     $mdThemingProvider.generateThemesOnDemand(false);
   }
 })();
- */

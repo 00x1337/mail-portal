@@ -32,7 +32,7 @@ fi
 
 # 4. Clear Twig Cache & Reload Services on VPS
 echo "🔄 Clearing cache and restarting web services..."
-ssh "${VPS_USER}@${VPS_HOST}" "sudo rm -rf /opt/mailcow-dockerized/data/web/templates/cache/* && sudo docker restart mailcowdockerized-php-fpm-mailcow-1 mailcowdockerized-nginx-mailcow-1"
+ssh "${VPS_USER}@${VPS_HOST}" "sudo rm -rf /opt/mailcow-dockerized/data/web/templates/cache/* && sudo docker restart mailcowdockerized-php-fpm-mailcow-1 mailcowdockerized-nginx-mailcow-1 mailcowdockerized-sogo-mailcow-1"
 
 # 5. Health Check
 echo "🔍 Verifying deployment (waiting 3s for services to be ready)..."
