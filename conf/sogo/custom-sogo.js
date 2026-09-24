@@ -276,19 +276,34 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // B. Sidebar Prominent Compose Button
+            // B. Sidebar User Profile Badge & Compose Button
             var sidenav = document.querySelector('md-sidenav.md-sidenav-left');
             if (sidenav) {
                 var toolbarPadded = sidenav.querySelector('md-toolbar.sg-padded');
-                if (toolbarPadded && !document.getElementById('sogo-sidebar-compose-btn')) {
-                    var sideComposeBtn = document.createElement('button');
-                    sideComposeBtn.id = 'sogo-sidebar-compose-btn';
-                    sideComposeBtn.className = 'sogo-sidebar-compose';
-                    sideComposeBtn.type = 'button';
-                    sideComposeBtn.innerHTML = '<span>➕ ' + (isArabic ? 'إنشاء بريد جديد' : 'Compose Message') + '</span>';
-                    sideComposeBtn.onclick = window.sogoComposeMessage;
+                if (toolbarPadded) {
+                    // Organization badge under user email
+                    if (company && !document.getElementById('sogo-sidebar-company-badge')) {
+                        var textContainer = toolbarPadded.querySelector('div[style*="overflow"]');
+                        if (textContainer) {
+                            var sideCompBadge = document.createElement('div');
+                            sideCompBadge.id = 'sogo-sidebar-company-badge';
+                            sideCompBadge.className = 'sogo-profile-badge';
+                            sideCompBadge.textContent = isArabic ? company.ar : company.en;
+                            textContainer.appendChild(sideCompBadge);
+                        }
+                    }
 
-                    toolbarPadded.parentNode.insertBefore(sideComposeBtn, toolbarPadded.nextSibling);
+                    // Prominent Compose Button
+                    if (!document.getElementById('sogo-sidebar-compose-btn')) {
+                        var sideComposeBtn = document.createElement('button');
+                        sideComposeBtn.id = 'sogo-sidebar-compose-btn';
+                        sideComposeBtn.className = 'sogo-sidebar-compose';
+                        sideComposeBtn.type = 'button';
+                        sideComposeBtn.innerHTML = '<span>➕ ' + (isArabic ? 'إنشاء بريد جديد' : 'Compose Message') + '</span>';
+                        sideComposeBtn.onclick = window.sogoComposeMessage;
+
+                        toolbarPadded.parentNode.insertBefore(sideComposeBtn, toolbarPadded.nextSibling);
+                    }
                 }
             }
         } catch (err) {
