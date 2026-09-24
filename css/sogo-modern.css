@@ -461,3 +461,239 @@ md-dialog.sg-mail-editor md-toolbar {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* ==========================================================================
+   10. Mobile Responsiveness & Touch Optimization (@media max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Topbar Mobile Layout */
+  md-toolbar.toolbar-main {
+    min-height: 52px !important;
+    padding: 0 6px !important;
+  }
+
+  /* Hamburger Menu Button: Large 44px Touch Target */
+  md-toolbar.toolbar-main md-button.md-icon-button {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    margin: 0 !important;
+  }
+
+  md-toolbar.toolbar-main md-button.md-icon-button md-icon {
+    font-size: 24px !important;
+  }
+
+  /* Hide Non-Essential Desktop Nav Icons on Mobile to prevent crowding */
+  md-toolbar.toolbar-main md-button[ng-href*="Calendar"],
+  md-toolbar.toolbar-main md-button[ng-href*="Contacts"],
+  md-toolbar.toolbar-main md-button[ng-href*="/user"],
+  md-toolbar.toolbar-main md-button[ng-href*="Administration"] {
+    display: none !important;
+  }
+
+  /* Company Badge on Mobile */
+  .sogo-header-company {
+    font-size: 11px !important;
+    padding: 3px 8px !important;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    max-width: 130px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Language Switcher Button on Mobile */
+  .sogo-lang-toggle {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    margin: 0 2px !important;
+  }
+
+  /* Quick Topbar Compose Button: hide on small mobile (FAB is active) */
+  .sogo-topbar-compose {
+    display: none !important;
+  }
+
+  /* Quick Refresh on Mobile */
+  .sogo-quick-refresh {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 0 2px !important;
+  }
+
+  /* Sidenav Drawer on Mobile */
+  md-sidenav.md-sidenav-left {
+    width: 84vw !important;
+    max-width: 320px !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  [dir="rtl"] md-sidenav.md-sidenav-left {
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  /* Sidebar Compose Button on Mobile: Big & Thumb-Friendly */
+  .sogo-sidebar-compose {
+    font-size: 15px !important;
+    padding: 12px 18px !important;
+    min-height: 48px !important;
+    margin: 12px 14px 8px 14px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Sidenav Folders: 46px Touch Friendly Rows */
+  .sg-mailbox-list-item {
+    min-height: 44px !important;
+    font-size: 15px !important;
+    padding: 4px 12px !important;
+  }
+
+  .sg-mailbox-list-item md-icon {
+    font-size: 22px !important;
+  }
+
+  /* Message List: Touch-Friendly Card Rows */
+  md-list-item.sg-message-list-item {
+    padding: 12px 14px !important;
+    min-height: 72px !important;
+    -webkit-tap-highlight-color: rgba(37, 99, 235, 0.1);
+  }
+
+  md-list-item.sg-message-list-item:active {
+    background-color: #f1f5f9 !important;
+  }
+
+  .sg-message-list-item .sg-md-title {
+    font-size: 14.5px !important;
+  }
+
+  .sg-message-list-item .sg-subject {
+    font-size: 13.5px !important;
+  }
+
+  .sg-message-list-item .sg-date {
+    font-size: 11.5px !important;
+  }
+
+  /* Floating Action Button (FAB) on Mobile */
+  .sg-fab-bottom-center,
+  md-button.md-fab.md-accent {
+    bottom: 24px !important;
+    right: 20px !important;
+    left: auto !important;
+    width: 56px !important;
+    height: 56px !important;
+    min-width: 56px !important;
+    min-height: 56px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45) !important;
+    z-index: 60 !important;
+  }
+
+  [dir="rtl"] .sg-fab-bottom-center,
+  [dir="rtl"] md-button.md-fab.md-accent {
+    right: auto !important;
+    left: 20px !important;
+  }
+
+  /* Reading Detail Pane on Mobile */
+  #detailView {
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  #detailView md-card {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    height: 100% !important;
+  }
+
+  /* Detail View Header Actions on Mobile */
+  #detailView md-card-actions {
+    padding: 8px 10px !important;
+    border-radius: 0 !important;
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+  }
+
+  /* Back to Inbox Button on Mobile */
+  #detailView md-card-actions md-button.hide-gt-xs {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    border-radius: 8px !important;
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    margin-right: 8px !important;
+  }
+
+  [dir="rtl"] #detailView md-card-actions md-button.hide-gt-xs {
+    margin-right: 0 !important;
+    margin-left: 8px !important;
+  }
+
+  /* Detail Action Buttons: Large Touch Targets */
+  #detailView md-card-actions md-button {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    min-height: 40px !important;
+    margin: 0 2px !important;
+  }
+
+  #detailView md-card-actions md-button md-icon {
+    font-size: 22px !important;
+  }
+
+  /* Message Subject on Mobile */
+  #detailView .sg-message-subject {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    padding: 12px 16px 4px 16px !important;
+  }
+
+  /* Message Body on Mobile */
+  #detailView .sg-message-body {
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    word-break: break-word !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Full Screen Compose Dialog on Mobile */
+  md-dialog.sg-mail-editor {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    position: fixed !important;
+  }
+
+  md-dialog.sg-mail-editor md-toolbar {
+    border-radius: 0 !important;
+  }
+}
+
