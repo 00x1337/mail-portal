@@ -467,42 +467,41 @@ md-dialog.sg-mail-editor md-toolbar {
   background: #0f172a !important;
 }
 
-/* --- 9. Floating Compose Button (Extended FAB - Gmail Style) --- */
+/* --- 9. Floating Compose Button (Clean Minimalist Circular FAB) --- */
 .sg-fab-bottom-center,
 md-button.md-fab.md-accent,
 button.md-fab.md-accent,
 md-fab-trigger button.md-fab {
   position: fixed !important;
-  bottom: 28px !important;
-  right: 28px !important;
+  bottom: 24px !important;
+  right: 24px !important;
   left: auto !important;
   top: auto !important;
-  width: auto !important;
-  min-width: 150px !important;
-  max-width: 240px !important;
+  width: 48px !important;
   height: 48px !important;
+  min-width: 48px !important;
   min-height: 48px !important;
+  max-width: 48px !important;
   max-height: 48px !important;
-  border-radius: 24px !important;
-  padding: 0 22px 0 16px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  margin: 0 !important;
   box-sizing: border-box !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 8px !important;
   background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.38), 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4), 0 2px 6px rgba(0, 0, 0, 0.12) !important;
   z-index: 85 !important;
   cursor: pointer !important;
-  text-transform: none !important;
-  letter-spacing: normal !important;
+  overflow: hidden !important;
   outline: none !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* RTL layout (Arabic) positioning for FAB */
+/* RTL layout (Arabic) positioning for Circular FAB */
 [dir="rtl"] .sg-fab-bottom-center,
 [dir="rtl"] md-button.md-fab.md-accent,
 [dir="rtl"] button.md-fab.md-accent,
@@ -516,8 +515,8 @@ body.rtl md-button.md-fab.md-accent,
 body.rtl button.md-fab.md-accent,
 body.rtl md-fab-trigger button.md-fab {
   right: auto !important;
-  left: 28px !important;
-  padding: 0 16px 0 22px !important;
+  left: 24px !important;
+  padding: 0 !important;
 }
 
 /* Hover & Active States */
@@ -526,29 +525,30 @@ md-button.md-fab.md-accent:hover,
 button.md-fab.md-accent:hover,
 md-fab-trigger button.md-fab:hover {
   background: linear-gradient(135deg, #1d4ed8, #1e40af) !important;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.5), 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5), 0 3px 8px rgba(0, 0, 0, 0.15) !important;
+  transform: translateY(-2px) scale(1.06) !important;
 }
 
 .sg-fab-bottom-center:active,
 md-button.md-fab.md-accent:active,
 button.md-fab.md-accent:active,
 md-fab-trigger button.md-fab:active {
-  transform: translateY(0) scale(0.98) !important;
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35) !important;
+  transform: translateY(0) scale(0.96) !important;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35) !important;
 }
 
-/* FAB Pencil Icon */
+/* Pencil Icon Inside Circular FAB */
 .sg-fab-bottom-center md-icon,
 md-button.md-fab.md-accent md-icon,
 button.md-fab.md-accent md-icon {
   color: #ffffff !important;
-  font-size: 20px !important;
-  width: 20px !important;
-  height: 20px !important;
-  line-height: 20px !important;
-  min-width: 20px !important;
+  font-size: 22px !important;
+  width: 22px !important;
+  height: 22px !important;
+  line-height: 22px !important;
+  min-width: 22px !important;
   margin: 0 !important;
+  padding: 0 !important;
   transition: transform 0.2s ease !important;
 }
 
@@ -558,44 +558,13 @@ button.md-fab.md-accent:hover md-icon {
   transform: rotate(-10deg) scale(1.1) !important;
 }
 
-/* FAB Text Element */
-.sg-fab-text {
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  letter-spacing: 0.2px !important;
-  white-space: nowrap !important;
-  line-height: 1 !important;
-  font-family: 'Plus Jakarta Sans', sans-serif !important;
-}
-
-[dir="rtl"] .sg-fab-text,
-html[lang="ar"] .sg-fab-text,
-body.rtl .sg-fab-text {
-  font-family: 'Cairo', sans-serif !important;
-  font-size: 14.5px !important;
-}
-
-/* CSS fallback if span not yet rendered */
-.sg-fab-bottom-center:empty::after,
-button.md-fab.md-accent:not(:has(.sg-fab-text))::after {
-  content: "New Message";
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  color: #ffffff !important;
-  letter-spacing: 0.2px !important;
-  white-space: nowrap !important;
-}
-
-[dir="rtl"] .sg-fab-bottom-center:empty::after,
-[dir="rtl"] button.md-fab.md-accent:not(:has(.sg-fab-text))::after,
-html[lang="ar"] .sg-fab-bottom-center:empty::after,
-html[lang="ar"] button.md-fab.md-accent:not(:has(.sg-fab-text))::after,
-body.rtl .sg-fab-bottom-center:empty::after,
-body.rtl button.md-fab.md-accent:not(:has(.sg-fab-text))::after {
-  content: "رسالة جديدة" !important;
-  font-family: 'Cairo', sans-serif !important;
-  font-size: 14.5px !important;
+/* Hide any text label inside FAB */
+.sg-fab-text,
+.sg-fab-bottom-center::after,
+md-button.md-fab.md-accent::after,
+button.md-fab.md-accent::after {
+  display: none !important;
+  content: "" !important;
 }
 
 /* --- 10. Clean Custom Scrollbars --- */
@@ -737,7 +706,7 @@ body.rtl button.md-fab.md-accent:not(:has(.sg-fab-text))::after {
     font-size: 11.5px !important;
   }
 
-  /* Floating Action Button (Extended FAB) on Mobile */
+  /* Floating Action Button (Circular FAB) on Mobile */
   .sg-fab-bottom-center,
   md-button.md-fab.md-accent,
   button.md-fab.md-accent,
@@ -745,14 +714,15 @@ body.rtl button.md-fab.md-accent:not(:has(.sg-fab-text))::after {
     bottom: 20px !important;
     right: 18px !important;
     left: auto !important;
-    height: 46px !important;
-    min-height: 46px !important;
-    max-height: 46px !important;
-    width: auto !important;
-    min-width: 135px !important;
-    padding: 0 18px 0 14px !important;
-    border-radius: 23px !important;
-    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45) !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.45) !important;
     z-index: 85 !important;
   }
 
@@ -768,7 +738,7 @@ body.rtl button.md-fab.md-accent:not(:has(.sg-fab-text))::after {
   body.rtl button.md-fab.md-accent {
     right: auto !important;
     left: 18px !important;
-    padding: 0 14px 0 18px !important;
+    padding: 0 !important;
   }
 
   /* Reading Detail Pane on Mobile */

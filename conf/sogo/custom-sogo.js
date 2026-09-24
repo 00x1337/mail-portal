@@ -332,20 +332,14 @@ window.sogoRefreshMail = function (e) {
                 }
             }
 
-            // C. Extended FAB Label (Gmail Style)
+            // C. Clean Minimalist Circular FAB (Remove any injected text)
+            var fabTexts = document.querySelectorAll('.sg-fab-text');
+            for (var t = 0; t < fabTexts.length; t++) {
+                try { fabTexts[t].remove(); } catch (e) {}
+            }
             var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, button.md-fab.md-accent, md-button.md-fab.md-accent');
             for (var f = 0; f < fabBtns.length; f++) {
-                var fab = fabBtns[f];
-                var fabText = fab.querySelector('.sg-fab-text');
-                var labelText = isArabic ? 'رسالة جديدة' : 'New Message';
-                if (!fabText) {
-                    fabText = document.createElement('span');
-                    fabText.className = 'sg-fab-text';
-                    fabText.textContent = labelText;
-                    fab.appendChild(fabText);
-                } else if (fabText.textContent !== labelText) {
-                    fabText.textContent = labelText;
-                }
+                fabBtns[f].title = isArabic ? 'رسالة جديدة' : 'New Message';
             }
         } catch (err) {
             console.warn('SOGo UI enhancement error:', err);
