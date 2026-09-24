@@ -4,11 +4,12 @@
 
 {% block content %}
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
   
   body {
-    font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
     background-color: #f1f5f9;
+    direction: ltr;
   }
   
   .portal-wrapper {
@@ -17,6 +18,7 @@
     align-items: center;
     justify-content: center;
     padding: 24px 12px;
+    direction: ltr;
   }
 
   .portal-card {
@@ -55,11 +57,11 @@
     font-size: 1.25rem;
     font-weight: 800;
     margin: 0;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
   .portal-subtitle {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     color: #94a3b8;
     margin-top: 4px;
     margin-bottom: 0;
@@ -67,15 +69,18 @@
 
   .portal-body {
     padding: 24px 22px;
+    text-align: left;
   }
 
   .field-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.85rem;
     font-weight: 700;
     color: #334155;
     margin-bottom: 8px;
-    text-align: right;
+    text-align: left;
   }
 
   /* Interactive Company Cards */
@@ -90,15 +95,15 @@
     background: #f8fafc;
     border: 1.5px solid #e2e8f0;
     border-radius: 12px;
-    padding: 10px 10px;
+    padding: 10px 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     cursor: pointer;
     transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     position: relative;
-    text-align: right;
+    text-align: left;
   }
 
   .company-tile:hover {
@@ -138,7 +143,7 @@
   }
 
   .tile-name {
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 700;
     color: #1e293b;
     white-space: nowrap;
@@ -147,10 +152,8 @@
   }
 
   .tile-domain {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     color: #64748b;
-    direction: ltr;
-    text-align: right;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -177,7 +180,7 @@
     color: #64748b;
     font-size: 0.78rem;
     cursor: pointer;
-    padding: 3px 8px;
+    padding: 4px 8px;
     border-radius: 6px;
     transition: color 0.15s ease;
     text-align: center;
@@ -198,7 +201,6 @@
   /* Account Input */
   .account-group {
     display: flex;
-    direction: ltr;
     border-radius: 10px;
     overflow: hidden;
     border: 1.5px solid #cbd5e1;
@@ -212,35 +214,33 @@
     background-color: #ffffff;
   }
 
-  .domain-suffix {
-    background-color: #e2e8f0;
-    color: #0f172a;
-    padding: 10px 12px;
-    font-weight: 700;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    border-right: 1px solid #cbd5e1;
-    user-select: none;
-  }
-
   .account-group input {
     border: none !important;
     background: transparent !important;
     box-shadow: none !important;
-    padding: 10px 12px;
+    padding: 11px 14px;
     font-size: 0.95rem;
     flex: 1;
     outline: none;
-    direction: ltr;
-    text-align: left;
     color: #0f172a;
+    font-family: inherit;
+  }
+
+  .domain-suffix {
+    background-color: #e2e8f0;
+    color: #0f172a;
+    padding: 11px 14px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid #cbd5e1;
+    user-select: none;
   }
 
   /* Password Input */
   .password-group {
     display: flex;
-    direction: ltr;
     border-radius: 10px;
     overflow: hidden;
     border: 1.5px solid #cbd5e1;
@@ -258,19 +258,19 @@
     border: none !important;
     background: transparent !important;
     box-shadow: none !important;
-    padding: 10px 12px;
+    padding: 11px 14px;
     font-size: 0.95rem;
     flex: 1;
     outline: none;
-    direction: ltr;
     color: #0f172a;
+    font-family: inherit;
   }
 
   .toggle-pwd-btn {
     border: none;
     background: transparent;
     color: #64748b;
-    padding: 0 12px;
+    padding: 0 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -283,7 +283,7 @@
   /* Submit Button */
   .btn-submit {
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     font-size: 1rem;
     font-weight: 700;
     color: #ffffff;
@@ -294,6 +294,7 @@
     box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
     transition: all 0.15s ease;
     margin-top: 6px;
+    font-family: inherit;
   }
 
   .btn-submit:hover {
@@ -308,8 +309,8 @@
 
   .portal-footer {
     text-align: center;
-    padding: 12px 20px 16px;
-    font-size: 0.8rem;
+    padding: 14px 20px 18px;
+    font-size: 0.82rem;
     color: #64748b;
     border-top: 1px solid #f1f5f9;
   }
@@ -366,7 +367,7 @@
   body.dark-mode .domain-suffix {
     background-color: #1e293b;
     color: #cbd5e1;
-    border-right-color: #334155;
+    border-left-color: #334155;
   }
   [data-bs-theme="dark"] .account-group input,
   [data-bs-theme="dark"] .password-group input,
@@ -379,63 +380,63 @@
 <div class="portal-wrapper">
   <div class="portal-card">
     
-    <!-- Clean Header -->
+    <!-- Header -->
     <div class="portal-header">
       <div class="portal-icon">
         <i class="bi bi-shield-lock-fill"></i>
       </div>
-      <h1 class="portal-title">بوابة البريد الإلكتروني</h1>
-      <p class="portal-subtitle">تسجيل الدخول الموحد للشركات</p>
+      <h1 class="portal-title">Corporate Webmail</h1>
+      <p class="portal-subtitle">Sign in to your work email</p>
     </div>
 
-    <!-- Clean Body -->
+    <!-- Form Body -->
     <div class="portal-body">
       <form method="post" autofill="off" id="simple_login_form" onsubmit="return handleFormSubmit();">
         <input type="hidden" name="login_user" id="final_login_user">
         <input type="hidden" id="selected_domain" value="@qafilatfood.sa">
 
-        <!-- 1. الشركة: بطاقات تفاعلية أنيقة -->
-        <div class="mb-3" dir="rtl">
+        <!-- 1. Company Selection -->
+        <div class="mb-3">
           <label class="field-label">
-            <i class="bi bi-buildings-fill text-primary ms-1"></i> اختر الشركة:
+            <i class="bi bi-buildings-fill text-primary"></i> Select Company
           </label>
           
           <div class="company-grid">
-            <!-- قافلة الغذاء -->
-            <div class="company-tile active" onclick="selectCompany('@qafilatfood.sa', this);" title="قافلة الغذاء لخدمات الإعاشة">
+            <!-- Qafilat Food -->
+            <div class="company-tile active" onclick="selectCompany('@qafilatfood.sa', this);" title="Qafilat Food Catering Services">
               <div class="tile-icon"><i class="bi bi-basket2-fill"></i></div>
               <div class="tile-info">
-                <div class="tile-name">قافلة الغذاء</div>
+                <div class="tile-name">Qafilat Food</div>
                 <div class="tile-domain">qafilatfood.sa</div>
               </div>
               <i class="bi bi-check-circle-fill check-icon"></i>
             </div>
 
-            <!-- رواد التعمير -->
-            <div class="company-tile" onclick="selectCompany('@rowaddevelopment.sa', this);" title="شركة رواد التعمير والتنمية">
+            <!-- Rowad Development -->
+            <div class="company-tile" onclick="selectCompany('@rowaddevelopment.sa', this);" title="Rowad Development & Construction">
               <div class="tile-icon"><i class="bi bi-building"></i></div>
               <div class="tile-info">
-                <div class="tile-name">رواد التعمير</div>
+                <div class="tile-name">Rowad Dev</div>
                 <div class="tile-domain">rowaddevelopment.sa</div>
               </div>
               <i class="bi bi-check-circle-fill check-icon"></i>
             </div>
 
-            <!-- تموين الديار -->
-            <div class="company-tile" onclick="selectCompany('@diyarsupply.sa', this);" title="شركة تموين الديار">
+            <!-- Diyar Supply -->
+            <div class="company-tile" onclick="selectCompany('@diyarsupply.sa', this);" title="Diyar Supply Co.">
               <div class="tile-icon"><i class="bi bi-box-seam-fill"></i></div>
               <div class="tile-info">
-                <div class="tile-name">تموين الديار</div>
+                <div class="tile-name">Diyar Supply</div>
                 <div class="tile-domain">diyarsupply.sa</div>
               </div>
               <i class="bi bi-check-circle-fill check-icon"></i>
             </div>
 
-            <!-- خطوط الإنشاء -->
-            <div class="company-tile" onclick="selectCompany('@khotoutco.sa', this);" title="شركة خطوط الإنشاء للمقاولات">
+            <!-- Khotout Co -->
+            <div class="company-tile" onclick="selectCompany('@khotoutco.sa', this);" title="Khotout Construction Co.">
               <div class="tile-icon"><i class="bi bi-hammer"></i></div>
               <div class="tile-info">
-                <div class="tile-name">خطوط الإنشاء</div>
+                <div class="tile-name">Khotout Co.</div>
                 <div class="tile-domain">khotoutco.sa</div>
               </div>
               <i class="bi bi-check-circle-fill check-icon"></i>
@@ -444,45 +445,45 @@
 
           <div class="text-center">
             <button type="button" class="btn-custom-mode" id="custom_btn" onclick="selectCustomAccount();">
-              <i class="bi bi-gear-fill me-1"></i> دخول بحساب مخصص / مسؤول
+              <i class="bi bi-gear-fill me-1"></i> Custom email or system admin
             </button>
           </div>
         </div>
 
-        <!-- 2. اسم المستخدم -->
-        <div class="mb-3" dir="rtl">
+        <!-- 2. Username -->
+        <div class="mb-3">
           <label for="user_box" class="field-label">
-            <i class="bi bi-person-badge-fill text-primary ms-1"></i> اسم الحساب:
+            <i class="bi bi-person-badge-fill text-primary"></i> Username
           </label>
           <div class="account-group" id="account_group_box">
+            <input type="text" id="user_box" placeholder="e.g. gm, hr, finance, or info" required autofocus oninput="onUserInput(this);">
             <span class="domain-suffix" id="domain_label">@qafilatfood.sa</span>
-            <input type="text" id="user_box" placeholder="مثال: gm أو info أو hr أو finance" required autofocus oninput="onUserInput(this);">
           </div>
         </div>
 
-        <!-- 3. كلمة المرور -->
-        <div class="mb-4" dir="rtl">
+        <!-- 3. Password -->
+        <div class="mb-4">
           <label for="pass_user" class="field-label">
-            <i class="bi bi-key-fill text-primary ms-1"></i> كلمة المرور:
+            <i class="bi bi-key-fill text-primary"></i> Password
           </label>
           <div class="password-group">
             <input name="pass_user" type="password" id="pass_user" placeholder="••••••••••••" required autocomplete="current-password">
-            <button type="button" class="toggle-pwd-btn" onclick="togglePass();" tabindex="-1" title="إظهار / إخفاء">
+            <button type="button" class="toggle-pwd-btn" onclick="togglePass();" tabindex="-1" title="Show / Hide Password">
               <i class="bi bi-eye" id="pwd_icon"></i>
             </button>
           </div>
         </div>
 
-        <!-- زر الدخول -->
+        <!-- Submit Button -->
         <button type="submit" class="btn-submit" id="submit_btn">
-          <i class="bi bi-box-arrow-in-right ms-1"></i> تسجيل الدخول
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
         </button>
       </form>
     </div>
 
     <!-- Footer -->
-    <div class="portal-footer" dir="rtl">
-      <a href="/admin"><i class="bi bi-shield-shaded me-1"></i> لوحة الإدارة (Admin)</a>
+    <div class="portal-footer">
+      <a href="/admin"><i class="bi bi-shield-lock me-1"></i> System Administration</a>
     </div>
 
   </div>
@@ -503,7 +504,7 @@ function selectCompany(domain, el) {
   var userBox = document.getElementById('user_box');
   label.style.display = 'flex';
   label.innerText = domain;
-  userBox.placeholder = 'مثال: gm أو info أو hr أو finance';
+  userBox.placeholder = 'e.g. gm, hr, finance, or info';
   userBox.focus();
 }
 
@@ -519,7 +520,7 @@ function selectCustomAccount() {
   var label = document.getElementById('domain_label');
   var userBox = document.getElementById('user_box');
   label.style.display = 'none';
-  userBox.placeholder = 'أدخل البريد كاملاً (مثال: admin أو user@domain.sa)';
+  userBox.placeholder = 'Enter full email (e.g. admin or user@domain.sa)';
   userBox.focus();
 }
 
@@ -559,7 +560,7 @@ function handleFormSubmit() {
 
   var btn = document.getElementById('submit_btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span> جارٍ الدخول...';
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Signing in...';
 
   return true;
 }
