@@ -1,266 +1,311 @@
 // ==========================================================================
 // Mailcow / SOGo Corporate Enhancements
-// Simplified, Executive, Bilingual (Arabic & English) Experience
+// Robust, Crash-Proof, Bilingual (Arabic & English) Experience
 // ==========================================================================
 
 // 1. Redirect to Mailcow custom login if on native login screen
-document.addEventListener('DOMContentLoaded', function () {
-    var loginForm = document.forms.namedItem("loginForm");
-    if (loginForm) {
-        window.location.href = '/user';
-    }
-});
+try {
+    document.addEventListener('DOMContentLoaded', function () {
+        var loginForm = document.forms.namedItem("loginForm");
+        if (loginForm) {
+            window.location.href = '/user';
+        }
+    });
+} catch (e) {}
 
 // 2. Global Logout Handler
-function mc_logout() {
-    fetch("/", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body: "logout=1"
-    }).then(function () {
+window.mc_logout = function () {
+    try {
+        fetch("/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: "logout=1"
+        }).finally(function () {
+            window.location.href = '/';
+        });
+    } catch (e) {
         window.location.href = '/';
-    }).catch(function () {
-        window.location.href = '/';
-    });
-}
+    }
+};
 
-// 3. CKEditor Default Settings
-if (typeof CKEDITOR !== 'undefined') {
-    CKEDITOR.addCss("body { font-size: 15px !important; font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif !important; }");
-}
+// 3. CKEditor Safe Font Adjustment
+try {
+    if (typeof CKEDITOR !== 'undefined' && typeof CKEDITOR.addCss === 'function') {
+        CKEDITOR.addCss("body { font-size: 15px !important; font-family: 'Cairo', 'Plus Jakarta Sans', sans-serif !important; }");
+    }
+} catch (e) {}
 
 // 4. Inject Google Fonts & Modern Stylesheet
 (function injectStyles() {
-    // Google Fonts
-    if (!document.getElementById('sogo-google-fonts')) {
-        var fontLink = document.createElement('link');
-        fontLink.id = 'sogo-google-fonts';
-        fontLink.rel = 'stylesheet';
-        fontLink.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
-        document.head.appendChild(fontLink);
-    }
+    try {
+        if (!document.getElementById('sogo-google-fonts')) {
+            var fontLink = document.createElement('link');
+            fontLink.id = 'sogo-google-fonts';
+            fontLink.rel = 'stylesheet';
+            fontLink.href = 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
+            document.head.appendChild(fontLink);
+        }
 
-    // External CSS link
-    if (!document.getElementById('sogo-modern-css-file')) {
-        var cssFile = document.createElement('link');
-        cssFile.id = 'sogo-modern-css-file';
-        cssFile.rel = 'stylesheet';
-        cssFile.href = '/css/sogo-modern.css?v=' + Date.now();
-        document.head.appendChild(cssFile);
-    }
+        if (!document.getElementById('sogo-modern-css-file')) {
+            var cssFile = document.createElement('link');
+            cssFile.id = 'sogo-modern-css-file';
+            cssFile.rel = 'stylesheet';
+            cssFile.href = '/css/sogo-modern.css?v=' + Date.now();
+            document.head.appendChild(cssFile);
+        }
+    } catch (e) {}
 })();
 
 // 5. Bilingual Language Switching Logic
-window.sogoToggleLanguage = function () {
+window.sogoToggleLanguage = function (e) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     var isArabic = (document.documentElement.lang === 'ar' ||
-                    (window.UserLanguage && window.UserLanguage.toLowerCase() === 'arabic') ||
+                    (window.UserLanguage && window.UserLanguage.toLowerCase().indexOf('ar') >= 0) ||
                     document.body.classList.contains('rtl'));
 
     var targetLang = isArabic ? 'English' : 'Arabic';
 
-    // Visual feedback
     var btn = document.getElementById('sogo-lang-toggle-btn');
     if (btn) {
-        btn.innerHTML = isArabic ? '⏳ Switching to English...' : '⏳ جاري التحويل للعربية...';
+        btn.innerHTML = (targetLang === 'Arabic') ? '⏳ جاري التحويل...' : '⏳ Switching...';
+        btn.style.opacity = '0.6';
         btn.style.pointerEvents = 'none';
-        btn.style.opacity = '0.7';
     }
 
-    // 1. Try SOGo AngularJS Preferences service
+    // A. Try AngularJS Preferences service
     try {
-        var injector = angular.element(document.body).injector();
-        if (injector && injector.has('Preferences')) {
-            var prefs = injector.get('Preferences');
-            if (prefs && prefs.defaults) {
-                prefs.defaults.SOGoLanguage = targetLang;
-                prefs.$save().then(function () {
-                    window.location.reload();
-                }).catch(function () {
-                    saveLangDirect(targetLang);
-                });
-                return;
+        if (typeof angular !== 'undefined') {
+            var injector = angular.element(document.querySelector('[ng-app]') || document.body).injector();
+            if (injector && injector.has('Preferences')) {
+                var prefs = injector.get('Preferences');
+                if (prefs && prefs.defaults) {
+                    prefs.defaults.SOGoLanguage = targetLang;
+                    prefs.$save().then(function () {
+                        window.location.reload();
+                    }).catch(function () {
+                        saveLangDirect(targetLang);
+                    });
+                    return;
+                }
             }
         }
-    } catch (e) {
-        console.warn('Angular prefs save failed, fallback to direct POST', e);
+    } catch (err) {
+        console.warn('Angular prefs save error:', err);
     }
 
-    // 2. Direct POST fallback
+    // B. Direct POST fallback
     saveLangDirect(targetLang);
 };
 
 function saveLangDirect(targetLang) {
-    var userFolder = window.UserFolderURL || ('/SOGo/so/' + (window.UserEmail || window.UserLogin));
-    var defaultsScript = document.getElementById('UserDefaults');
-    var defaults = {};
-    if (defaultsScript) {
-        try { defaults = JSON.parse(defaultsScript.textContent); } catch (e) { }
-    }
-    defaults.SOGoLanguage = targetLang;
+    try {
+        var userFolder = window.UserFolderURL || ('/SOGo/so/' + (window.UserEmail || window.UserLogin));
+        var defaultsScript = document.getElementById('UserDefaults');
+        var defaults = {};
+        if (defaultsScript) {
+            try { defaults = JSON.parse(defaultsScript.textContent); } catch (e) {}
+        }
+        defaults.SOGoLanguage = targetLang;
 
-    fetch(userFolder + '/Preferences/save', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        },
-        body: JSON.stringify({ defaults: defaults })
-    }).finally(function () {
+        fetch(userFolder + '/Preferences/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ defaults: defaults })
+        }).finally(function () {
+            window.location.reload();
+        });
+    } catch (e) {
         window.location.reload();
-    });
+    }
 }
 
-// 6. Prominent Compose Message Handler
+// 6. Robust Compose Message Trigger
 window.sogoComposeMessage = function (e) {
     if (e) {
         e.preventDefault();
         e.stopPropagation();
     }
-    // Try native SOGo FAB or buttons
-    var fab = document.querySelector('.sg-fab-bottom-center, md-button[aria-label*="Write a new message"], md-button[aria-label*="رسالة جديدة"], md-fab-trigger button');
-    if (fab) {
-        fab.click();
-        return;
+
+    // 1. Try triggering Angular ng-click on native SOGo compose button
+    var fabBtns = document.querySelectorAll('.sg-fab-bottom-center, md-button[aria-label*="Write a new message"], md-button[aria-label*="رسالة جديدة"], md-button[aria-label*="new message" i]');
+    for (var i = 0; i < fabBtns.length; i++) {
+        var btn = fabBtns[i];
+        if (btn.id !== 'sogo-sidebar-compose-btn' && btn.id !== 'sogo-topbar-compose-btn') {
+            try {
+                if (typeof angular !== 'undefined') {
+                    angular.element(btn).triggerHandler('click');
+                    return;
+                }
+            } catch (err) {}
+            btn.click();
+            return;
+        }
     }
-    // Scope fallback
+
+    // 2. Try Angular scope on MailboxController
     try {
-        var el = document.querySelector('[ng-controller="navController"], .view-list');
-        if (el) {
-            var scope = angular.element(el).scope();
-            if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
-                scope.mailbox.newMessage();
-                scope.$apply();
+        if (typeof angular !== 'undefined') {
+            var viewEl = document.querySelector('[ui-view="mailbox"]') || document.querySelector('.view-list');
+            if (viewEl) {
+                var scope = angular.element(viewEl).scope();
+                if (scope && scope.mailbox && typeof scope.mailbox.newMessage === 'function') {
+                    scope.mailbox.newMessage();
+                    scope.$apply();
+                    return;
+                }
             }
         }
     } catch (err) {
-        console.warn('Scope newMessage fallback', err);
+        console.warn('Scope newMessage error:', err);
     }
+
+    // 3. Fallback: simulate hotkey 'c'
+    try {
+        var keyEv = new KeyboardEvent('keydown', { key: 'c', code: 'KeyC', bubbles: true, cancelable: true });
+        document.dispatchEvent(keyEv);
+    } catch (err) {}
 };
 
-// 7. Quick Mailbox Refresh
+// 7. Quick Mailbox Refresh Trigger
 window.sogoRefreshMail = function (e) {
     if (e) {
         e.preventDefault();
         e.stopPropagation();
     }
     try {
-        var el = document.querySelector('.view-list');
-        if (el) {
-            var scope = angular.element(el).scope();
-            if (scope && scope.mailbox && scope.mailbox.selectedFolder) {
-                scope.mailbox.selectedFolder.$filter(scope.mailbox.service ? scope.mailbox.service.$query : '');
-                scope.$apply();
-                return;
+        if (typeof angular !== 'undefined') {
+            var el = document.querySelector('.view-list');
+            if (el) {
+                var scope = angular.element(el).scope();
+                if (scope && scope.mailbox && scope.mailbox.selectedFolder) {
+                    scope.mailbox.selectedFolder.$filter(scope.mailbox.service ? scope.mailbox.service.$query : '');
+                    scope.$apply();
+                    return;
+                }
             }
         }
-    } catch (err) {
-        console.warn('Refresh error', err);
-    }
-    // Reload state if needed
+    } catch (err) {}
     window.location.reload();
 };
 
-// 8. Dynamic UI Injection (Language Switcher, Prominent Compose, Company Badge)
+// 8. Safe, Non-Intrusive UI Injections
 (function initUIEnhancements() {
     function getCompanyInfo(email) {
         if (!email) email = window.UserEmail || window.UserLogin || '';
         email = email.toLowerCase();
-        if (email.includes('@qafilatfood.sa')) {
+        if (email.indexOf('qafilatfood.sa') >= 0) {
             return { ar: 'قافلة الغذاء', en: 'Qafilat Food' };
-        } else if (email.includes('@rowaddevelopment.sa')) {
+        } else if (email.indexOf('rowaddevelopment.sa') >= 0) {
             return { ar: 'رواد التعمير والتنمية', en: 'Rowad Development' };
-        } else if (email.includes('@diyarsupply.sa')) {
+        } else if (email.indexOf('diyarsupply.sa') >= 0) {
             return { ar: 'تموين الديار', en: 'Diyar Supply' };
-        } else if (email.includes('@khotoutco.sa')) {
+        } else if (email.indexOf('khotoutco.sa') >= 0) {
             return { ar: 'خطوط الإنشاء', en: 'Khotout Co.' };
         }
         return null;
     }
 
     function renderEnhancements() {
-        var isArabic = (document.documentElement.lang === 'ar' ||
-                        (window.UserLanguage && window.UserLanguage.toLowerCase() === 'arabic') ||
-                        document.body.classList.contains('rtl'));
+        try {
+            var isArabic = (document.documentElement.lang === 'ar' ||
+                            (window.UserLanguage && window.UserLanguage.toLowerCase().indexOf('ar') >= 0) ||
+                            document.body.classList.contains('rtl'));
 
-        var company = getCompanyInfo();
+            var company = getCompanyInfo();
 
-        // A. Inject into Topbar (.toolbar-main)
-        var topbar = document.querySelector('md-toolbar.toolbar-main');
-        if (topbar) {
-            var groupLast = topbar.querySelector('.sg-toolbar-group-last');
-            var groupFirst = topbar.querySelector('.sg-toolbar-group-1');
+            // A. Topbar Enhancements
+            var topbar = document.querySelector('md-toolbar.toolbar-main');
+            if (topbar) {
+                var groupFirst = topbar.querySelector('.sg-toolbar-group-1');
+                var groupLast = topbar.querySelector('.sg-toolbar-group-last');
 
-            // 1. Company Badge in Topbar
-            if (groupFirst && company && !document.getElementById('sogo-company-header-badge')) {
-                var compBadge = document.createElement('div');
-                compBadge.id = 'sogo-company-header-badge';
-                compBadge.className = 'sogo-header-company hide show-gt-sm';
-                compBadge.innerHTML = '<span class="company-dot"></span>' + (isArabic ? company.ar : company.en);
-                groupFirst.appendChild(compBadge);
+                // 1. Company Badge in Topbar (only if not already there)
+                if (groupFirst && company && !document.getElementById('sogo-company-header-badge')) {
+                    var compBadge = document.createElement('div');
+                    compBadge.id = 'sogo-company-header-badge';
+                    compBadge.className = 'sogo-header-company hide show-gt-sm';
+                    compBadge.innerHTML = '<span class="company-dot"></span>' + (isArabic ? company.ar : company.en);
+                    groupFirst.appendChild(compBadge);
+                }
+
+                // 2. Language Switcher & Quick Actions in Topbar (only if not already there)
+                if (groupLast && !document.getElementById('sogo-lang-toggle-btn')) {
+                    var actionsWrap = document.createElement('div');
+                    actionsWrap.id = 'sogo-topbar-actions-wrap';
+                    actionsWrap.style.display = 'inline-flex';
+                    actionsWrap.style.alignItems = 'center';
+
+                    // Quick Compose in Topbar
+                    var composeBtn = document.createElement('button');
+                    composeBtn.id = 'sogo-topbar-compose-btn';
+                    composeBtn.className = 'sogo-topbar-compose hide show-gt-xs';
+                    composeBtn.type = 'button';
+                    composeBtn.innerHTML = '<span>✏️ ' + (isArabic ? 'رسالة جديدة' : 'New Email') + '</span>';
+                    composeBtn.onclick = window.sogoComposeMessage;
+                    actionsWrap.appendChild(composeBtn);
+
+                    // Quick Refresh Button
+                    var refreshBtn = document.createElement('button');
+                    refreshBtn.className = 'sogo-quick-refresh';
+                    refreshBtn.type = 'button';
+                    refreshBtn.title = isArabic ? 'تحديث البريد' : 'Refresh Mail';
+                    refreshBtn.innerHTML = '↻';
+                    refreshBtn.onclick = window.sogoRefreshMail;
+                    actionsWrap.appendChild(refreshBtn);
+
+                    // Language Toggle Pill Button
+                    var langBtn = document.createElement('button');
+                    langBtn.id = 'sogo-lang-toggle-btn';
+                    langBtn.className = 'sogo-lang-toggle';
+                    langBtn.type = 'button';
+                    langBtn.title = isArabic ? 'Switch interface to English' : 'التحويل للواجهة العربية';
+                    langBtn.innerHTML = isArabic ? '🌐 English' : '🌐 العربية';
+                    langBtn.onclick = window.sogoToggleLanguage;
+                    actionsWrap.appendChild(langBtn);
+
+                    groupLast.insertBefore(actionsWrap, groupLast.firstChild);
+                }
             }
 
-            // 2. Language Switcher & Quick Buttons in Topbar
-            if (groupLast && !document.getElementById('sogo-lang-toggle-btn')) {
-                // Wrapper
-                var actionsWrap = document.createElement('div');
-                actionsWrap.id = 'sogo-topbar-actions-wrap';
-                actionsWrap.style.display = 'inline-flex';
-                actionsWrap.style.alignItems = 'center';
+            // B. Sidebar Prominent Compose Button
+            var sidenav = document.querySelector('md-sidenav.md-sidenav-left');
+            if (sidenav) {
+                var toolbarPadded = sidenav.querySelector('md-toolbar.sg-padded');
+                if (toolbarPadded && !document.getElementById('sogo-sidebar-compose-btn')) {
+                    var sideComposeBtn = document.createElement('button');
+                    sideComposeBtn.id = 'sogo-sidebar-compose-btn';
+                    sideComposeBtn.className = 'sogo-sidebar-compose';
+                    sideComposeBtn.type = 'button';
+                    sideComposeBtn.innerHTML = '<span>➕ ' + (isArabic ? 'إنشاء بريد جديد' : 'Compose Message') + '</span>';
+                    sideComposeBtn.onclick = window.sogoComposeMessage;
 
-                // Compose Button in Topbar
-                var composeBtn = document.createElement('button');
-                composeBtn.className = 'sogo-topbar-compose hide show-gt-xs';
-                composeBtn.innerHTML = '<span>✏️ ' + (isArabic ? 'رسالة جديدة' : 'New Email') + '</span>';
-                composeBtn.onclick = window.sogoComposeMessage;
-                actionsWrap.appendChild(composeBtn);
-
-                // Quick Refresh Button
-                var refreshBtn = document.createElement('button');
-                refreshBtn.className = 'sogo-quick-refresh';
-                refreshBtn.title = isArabic ? 'تحديث البريد' : 'Refresh Mail';
-                refreshBtn.innerHTML = '↻';
-                refreshBtn.onclick = window.sogoRefreshMail;
-                actionsWrap.appendChild(refreshBtn);
-
-                // Language Toggle Pill Button
-                var langBtn = document.createElement('button');
-                langBtn.id = 'sogo-lang-toggle-btn';
-                langBtn.className = 'sogo-lang-toggle';
-                langBtn.title = isArabic ? 'Switch interface to English' : 'التحويل للواجهة العربية';
-                langBtn.innerHTML = isArabic ? '🌐 English' : '🌐 العربية';
-                langBtn.onclick = window.sogoToggleLanguage;
-                actionsWrap.appendChild(langBtn);
-
-                // Insert before user controls
-                groupLast.insertBefore(actionsWrap, groupLast.firstChild);
+                    toolbarPadded.parentNode.insertBefore(sideComposeBtn, toolbarPadded.nextSibling);
+                }
             }
-        }
-
-        // B. Inject Prominent Compose Button in Sidebar
-        var sidenav = document.querySelector('md-sidenav.md-sidenav-left');
-        if (sidenav) {
-            var toolbarPadded = sidenav.querySelector('md-toolbar.sg-padded');
-            if (toolbarPadded && !document.getElementById('sogo-sidebar-compose-btn')) {
-                var sideComposeBtn = document.createElement('button');
-                sideComposeBtn.id = 'sogo-sidebar-compose-btn';
-                sideComposeBtn.className = 'sogo-sidebar-compose';
-                sideComposeBtn.innerHTML = '<span>➕ ' + (isArabic ? 'إنشاء بريد جديد' : 'Compose Message') + '</span>';
-                sideComposeBtn.onclick = window.sogoComposeMessage;
-
-                // Insert right after user info header
-                toolbarPadded.parentNode.insertBefore(sideComposeBtn, toolbarPadded.nextSibling);
-            }
+        } catch (err) {
+            console.warn('SOGo UI enhancement error:', err);
         }
     }
 
-    // Run on load and periodically to maintain UI consistency during SPA routing
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', renderEnhancements);
     } else {
         renderEnhancements();
     }
 
-    setInterval(renderEnhancements, 1000);
+    // Run periodically only if missing elements
+    setInterval(function () {
+        if (!document.getElementById('sogo-lang-toggle-btn') || !document.getElementById('sogo-sidebar-compose-btn')) {
+            renderEnhancements();
+        }
+    }, 1500);
 })();
