@@ -25,11 +25,27 @@ body.main {
   background-color: #f8fafc !important;
 }
 
-/* --- 2. Hide Dated Clutter (Day number & calendar widget) --- */
+/* --- 2. Hide Dated Clutter & Redundant Widgets --- */
 .sg-date-group,
 .sg-date-today,
 md-button[ng-show*="path.help"],
-a[href*="help"] {
+a[href*="help"],
+/* Hide mailcow Preferences (wrench / build icon) */
+md-toolbar.toolbar-main a[aria-label*="mailcow Preferences" i],
+md-toolbar.toolbar-main a[href="/user"],
+md-toolbar.toolbar-main a[ng-href="/user"],
+.sg-toolbar-group-last a[aria-label*="mailcow Preferences" i],
+.sg-toolbar-group-last a[href="/user"],
+.sg-toolbar-group-last a[ng-href="/user"],
+/* Hide disabled Mail icon when already viewing Mail */
+md-toolbar.toolbar-main a[aria-label="Mail"][disabled],
+md-toolbar.toolbar-main a[aria-label="Mail"][disabled="disabled"],
+md-toolbar.toolbar-main a[ng-href*="Mail"][disabled],
+md-toolbar.toolbar-main a[ng-href*="Mail"][disabled="disabled"],
+.sg-toolbar-group-last a[aria-label="Mail"][disabled],
+.sg-toolbar-group-last a[aria-label="Mail"][disabled="disabled"],
+.sg-toolbar-group-last a[ng-href*="Mail"][disabled],
+.sg-toolbar-group-last a[ng-href*="Mail"][disabled="disabled"] {
   display: none !important;
 }
 
@@ -60,6 +76,11 @@ md-toolbar.toolbar-main md-button.md-icon-button {
 
 md-toolbar.toolbar-main md-button.md-icon-button:hover {
   background: rgba(255, 255, 255, 0.12) !important;
+}
+
+md-toolbar.toolbar-main a[aria-label="Disconnect"]:hover md-icon,
+md-toolbar.toolbar-main a[onclick*="mc_logout"]:hover md-icon {
+  color: #f87171 !important;
 }
 
 /* --- 4. Custom Topbar Language Switcher & Actions --- */

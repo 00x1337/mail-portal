@@ -252,7 +252,7 @@ window.sogoRefreshMail = function (e) {
                     // Quick Compose in Topbar
                     var composeBtn = document.createElement('button');
                     composeBtn.id = 'sogo-topbar-compose-btn';
-                    composeBtn.className = 'sogo-topbar-compose hide show-gt-xs';
+                    composeBtn.className = 'sogo-topbar-compose';
                     composeBtn.type = 'button';
                     composeBtn.innerHTML = '<span>✏️ ' + (isArabic ? 'رسالة جديدة' : 'New Email') + '</span>';
                     composeBtn.onclick = window.sogoComposeMessage;
@@ -279,6 +279,26 @@ window.sogoRefreshMail = function (e) {
 
                     groupLast.insertBefore(actionsWrap, groupLast.firstChild);
                 }
+
+                // Clean up unwanted topbar buttons: mailcow Preferences (build icon) and disabled Mail icon
+                var unwantedBtns = topbar.querySelectorAll(
+                    'a[aria-label*="mailcow Preferences" i], ' +
+                    'a[href="/user"], ' +
+                    'a[ng-href="/user"], ' +
+                    'a[aria-label="Mail"][disabled], ' +
+                    'a[ng-href*="Mail"][disabled]'
+                );
+                for (var u = 0; u < unwantedBtns.length; u++) {
+                    unwantedBtns[u].style.setProperty('display', 'none', 'important');
+                }
+
+                // Set localized tooltips for kept buttons
+                var logoutBtn = topbar.querySelector('a[aria-label="Disconnect"], a[onclick*="mc_logout"]');
+                if (logoutBtn) logoutBtn.title = isArabic ? 'تسجيل الخروج' : 'Log out';
+                var calBtn = topbar.querySelector('a[aria-label="Calendar"], a[ng-href*="Calendar"]');
+                if (calBtn) calBtn.title = isArabic ? 'التقويم' : 'Calendar';
+                var contactsBtn = topbar.querySelector('a[aria-label="Address Book"], a[ng-href*="Contacts"]');
+                if (contactsBtn) contactsBtn.title = isArabic ? 'جهات الاتصال' : 'Contacts';
             }
 
             // B. Sidebar User Profile Badge & Compose Button
