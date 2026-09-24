@@ -3,101 +3,335 @@
 {% block navbar %}{% endblock %}
 
 {% block content %}
-<div class="row mb-4" style="margin-top: 60px">
-  <div class="col-12 col-md-7 col-lg-6 col-xl-5 ms-auto me-auto">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    background-color: #f1f5f9;
+    direction: ltr;
+  }
+  
+  .portal-wrapper {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+    direction: ltr;
+  }
 
-    <div class="card">
-      <div class="card-header d-flex align-items-center text-break">
-        <i class="bi bi-person-fill me-2"></i> {{ lang.login.login_admin }}
-        <div class="ms-auto form-check form-switch my-auto d-flex align-items-center">
-          <label class="form-check-label"><i class="bi bi-moon-fill"></i></label>
-          <input class="form-check-input ms-2" type="checkbox" id="dark-mode-toggle">
-        </div>
-        <div class="ms-4 d-grid d-sm-block">
-          <button type="button" {% if available_languages|length == 1 %}disabled="true"{% endif %} class="text-secondary btn p-0 border-0 bg-transparent ms-auto dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="flag-icon flag-icon-{{ mailcow_locale[-2:] }}"></span>
-          </button>
-          <ul class="dropdown-menu ms-auto login">
-            {% for key, val in available_languages %}
-              <li>
-                <a class="dropdown-item {% if mailcow_locale == key %}active{% endif %}" href="?{{ query_string({'lang': key}) }}">
-                  <span class="flag-icon flag-icon-{{ key[-2:] }}"></span>{{ val }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </div>
+  .portal-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.07), 0 8px 12px -6px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 440px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  .portal-header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
+    padding: 26px 24px 22px;
+    text-align: center;
+  }
+
+  .portal-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #38bdf8;
+    margin-bottom: 10px;
+  }
+
+  .portal-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .portal-subtitle {
+    font-size: 0.84rem;
+    color: #94a3b8;
+    margin-top: 4px;
+    margin-bottom: 0;
+  }
+
+  .portal-body {
+    padding: 24px 22px;
+    text-align: left;
+  }
+
+  /* Admin Badge */
+  .admin-account-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .admin-avatar {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .admin-meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: block;
+    line-height: 1.2;
+  }
+
+  .admin-handle {
+    font-size: 0.78rem;
+    color: #64748b;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .admin-status {
+    width: 8px;
+    height: 8px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+
+  .field-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+
+  /* Password Input */
+  .password-group {
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1.5px solid #cbd5e1;
+    background-color: #f8fafc;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .password-group:focus-within {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    background-color: #ffffff;
+  }
+
+  .password-group input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    flex: 1;
+    outline: none;
+    color: #0f172a;
+    font-family: inherit;
+  }
+
+  .toggle-pwd-btn {
+    border: none;
+    background: transparent;
+    color: #64748b;
+    padding: 0 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .toggle-pwd-btn:hover {
+    color: #0f172a;
+  }
+
+  /* Submit Button */
+  .btn-submit {
+    width: 100%;
+    padding: 13px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+    transition: all 0.15s ease;
+    margin-top: 14px;
+    font-family: inherit;
+  }
+
+  .btn-submit:hover {
+    background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+
+  .portal-footer {
+    text-align: center;
+    padding: 14px 20px 18px;
+    font-size: 0.82rem;
+    color: #64748b;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .portal-footer a {
+    color: #64748b;
+    text-decoration: none;
+  }
+
+  .portal-footer a:hover {
+    color: #0284c7;
+    text-decoration: underline;
+  }
+
+  /* Dark mode */
+  [data-bs-theme="dark"] .portal-card,
+  body.dark-mode .portal-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  }
+  [data-bs-theme="dark"] .field-label,
+  body.dark-mode .field-label {
+    color: #e2e8f0;
+  }
+  [data-bs-theme="dark"] .admin-account-card,
+  body.dark-mode .admin-account-card {
+    background: #0f172a;
+    border-color: #334155;
+  }
+  [data-bs-theme="dark"] .admin-name,
+  body.dark-mode .admin-name {
+    color: #f1f5f9;
+  }
+  [data-bs-theme="dark"] .password-group,
+  body.dark-mode .password-group {
+    background-color: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+  }
+  [data-bs-theme="dark"] .password-group input,
+  body.dark-mode .password-group input {
+    color: #f8fafc;
+  }
+</style>
+
+<div class="portal-wrapper">
+  <div class="portal-card">
+    
+    <!-- Header -->
+    <div class="portal-header">
+      <div class="portal-icon">
+        <i class="bi bi-shield-lock-fill"></i>
       </div>
-      <div class="card-body">
-        <div class="text-center mailcow-logo mb-4">
-          <img class="main-logo" src="{{ logo|default('/img/cow_mailcow.svg') }}" alt="mailcow">
-          <img class="main-logo-dark" src="{{ logo_dark|default('/img/cow_mailcow.svg') }}" alt="mailcow-logo-dark">
-        </div>
-        {% if ui_texts.ui_announcement_text and ui_texts.ui_announcement_active %}
-        <div class="my-4 alert alert-{{ ui_texts.ui_announcement_type }} rot-enc ui-announcement-alert">{{ ui_texts.ui_announcement_text|rot13 }}</div>
-        {% endif %}
-        <form method="post" autofill="off">
-          <div class="d-flex mt-3">
-            <label class="visually-hidden" for="login_user">{{ lang.login.username }}</label>
-            <div class="input-group">
-              <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-              <input name="login_user" autocorrect="off" autocapitalize="none" type="text" id="login_user" class="form-control" placeholder="{{ lang.login.username }}" required="" autofocus="" autocomplete="username">
-            </div>
-          </div>
-          <div class="d-flex mt-3">
-            <label class="visually-hidden" for="pass_user">{{ lang.login.password }}</label>
-            <div class="input-group">
-              <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
-              <input name="pass_user" type="password" id="pass_user" class="form-control" placeholder="{{ lang.login.password }}" required="" autocomplete="current-password">
-              <button type="button" class="input-group-text" style="cursor:pointer;" onclick="var i=document.getElementById('pass_user'),ic=this.querySelector('i');if(i.type==='password'){i.type='text';ic.className='bi bi-eye-slash';}else{i.type='password';ic.className='bi bi-eye';}" tabindex="-1" aria-label="Toggle password visibility"><i class="bi bi-eye"></i></button>
-            </div>
-          </div>
-          <div class="d-flex justify-content-between mt-4" style="position: relative">
-            <button type="submit" class="btn btn-xs-lg btn-success w-100 mt-2 mx-auto" style="max-width: 400px;" value="Login">{{ lang.login.login }}</button>
-          </div>
-        </form>
-        <div class="hr-title"><strong>{{ lang.login.other_logins }}</strong></div>
-        <div class="d-flex flex-column align-items-center">
-          <a class="btn btn-xs-lg btn-secondary w-100" style="max-width: 400px;" href="#" id="fido2-login"><i class="bi bi-shield-fill-check"></i> {{ lang.login.fido2_webauthn }}</a>
-        </div>
-        {% if login_delay %}
-        <p><div class="my-4 alert alert-info">{{ lang.login.delayed|format(login_delay) }}</b></div></p>
-        {% endif %}
-        <div class="my-4" id="fido2-alerts"></div>
-        {% if (mailcow_apps or app_links) and not hide_mailcow_apps %}
-        <legend><i class="bi bi-link-45deg"></i> {{ ui_texts.apps_name|raw }}</legend><hr />
-        <div class="my-2 apps">
-          {% for app in mailcow_apps %}
-            {% if not app.hide %}
-              {% if not skip_sogo or not is_uri('SOGo', app.link) %}
-              <div class="m-2">
-                <a href="{{ app.link }}" role="button" {% if app.description %}title="{{ app.description }}"{% endif %} class="btn btn-primary btn-block">{{ app.name }}</a>
-              </div>
-            {% endif %}
-          {% endif %}
-          {% endfor %}
-          {% for row in app_links %}
-            {% for key, val in row %}
-            {% if not val.hide %}
-              <div class="m-2">
-                <a href="{{ val.link }}" role="button" class="btn btn-primary btn-block">{{ key }}</a>
-              </div>
-            {% endif %}
-            {% endfor %}
-          {% endfor %}
-        </div>
-        {% endif %}
-      </div>
+      <h1 class="portal-title">Admin Console</h1>
+      <p class="portal-subtitle">System Administrator Access</p>
     </div>
 
-    {% if custom_login.hide_user_quicklink != 1 or custom_login.hide_domainadmin_quicklink != 1 %}
-    <p class="text-center mt-3 text-muted" style="font-size: 0.9rem;">
-      {{ lang.login.login_linkstext }}<br>
-      {% if custom_login.hide_user_quicklink != 1 %}<a href="/">{{ lang.login.login_usertext }}</a>{% endif %}
-      {% if custom_login.hide_user_quicklink != 1 and custom_login.hide_domainadmin_quicklink != 1 %}|{% endif %}
-      {% if custom_login.hide_domainadmin_quicklink != 1 %}<a href="/domainadmin">{{ lang.login.login_domainadmintext }}</a>{% endif %}
-    </p>
-    {% endif %}
+    <!-- Form Body -->
+    <div class="portal-body">
+      {% if ui_texts.ui_announcement_text and ui_texts.ui_announcement_active %}
+      <div class="my-3 alert alert-{{ ui_texts.ui_announcement_type }}">{{ ui_texts.ui_announcement_text|rot13 }}</div>
+      {% endif %}
+
+      <form method="post" autofill="off" onsubmit="var btn=document.getElementById('admin_submit');btn.disabled=true;btn.innerHTML='<span class=\"spinner-border spinner-border-sm me-2\"></span> Signing in...';return true;">
+        <!-- Username prefilled as admin -->
+        <input type="hidden" name="login_user" value="admin">
+
+        <!-- Pre-selected Admin Profile Badge -->
+        <div class="admin-account-card">
+          <div class="admin-avatar">
+            <i class="bi bi-person-fill"></i>
+          </div>
+          <div class="admin-meta">
+            <span class="admin-name">Administrator</span>
+            <span class="admin-handle">user: <strong>admin</strong></span>
+          </div>
+          <div class="admin-status" title="Active"></div>
+        </div>
+
+        <!-- Password Only Field -->
+        <div class="mb-2">
+          <label for="pass_user" class="field-label">
+            <i class="bi bi-key-fill text-primary"></i> Master Password
+          </label>
+          <div class="password-group">
+            <input name="pass_user" type="password" id="pass_user" placeholder="••••••••••••" required autofocus autocomplete="current-password">
+            <button type="button" class="toggle-pwd-btn" onclick="togglePass();" tabindex="-1" title="Show / Hide Password">
+              <i class="bi bi-eye" id="pwd_icon"></i>
+            </button>
+          </div>
+        </div>
+
+        {% if login_delay %}
+        <div class="my-3 alert alert-info">{{ lang.login.delayed|format(login_delay) }}</div>
+        {% endif %}
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="admin_submit">
+          <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Admin Console
+        </button>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="portal-footer">
+      <a href="/"><i class="bi bi-arrow-left me-1"></i> Return to Corporate Webmail</a>
+    </div>
+
   </div>
 </div>
+
+<script>
+function togglePass() {
+  var pwd = document.getElementById('pass_user');
+  var icon = document.getElementById('pwd_icon');
+  if (pwd.type === 'password') {
+    pwd.type = 'text';
+    icon.className = 'bi bi-eye-slash';
+  } else {
+    pwd.type = 'password';
+    icon.className = 'bi bi-eye';
+  }
+}
+</script>
 {% endblock %}
