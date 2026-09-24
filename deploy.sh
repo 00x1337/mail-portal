@@ -35,7 +35,8 @@ echo "🔄 Clearing cache and restarting web services..."
 ssh "${VPS_USER}@${VPS_HOST}" "sudo rm -rf /opt/mailcow-dockerized/data/web/templates/cache/* && sudo docker restart mailcowdockerized-php-fpm-mailcow-1 mailcowdockerized-nginx-mailcow-1"
 
 # 5. Health Check
-echo "🔍 Verifying deployment..."
+echo "🔍 Verifying deployment (waiting 3s for services to be ready)..."
+sleep 3
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://${VPS_HOST}:8080/")
 if [ "$HTTP_STATUS" -eq 200 ]; then
     echo "🎉 Deployment SUCCESSFUL! Web portal is live at: http://${VPS_HOST}:8080/"
